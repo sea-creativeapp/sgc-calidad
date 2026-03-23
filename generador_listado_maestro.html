@@ -1,5 +1,1471 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
-  <title>Listado Maestro — SEA SAS ESP BIC</title>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SGC ISO 9001 — Sistema de Gestión de Calidad</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1628;
+    --navy-mid: #112040;
+    --navy-light: #1a3060;
+    --gold: #c8972a;
+    --gold-light: #e8b84b;
+    --gold-pale: #f5e6c0;
+    --cream: #faf7f0;
+    --white: #ffffff;
+    --red: #c0392b;
+    --green: #1a7a4a;
+    --green-light: #27ae60;
+    --orange: #e67e22;
+    --gray-100: #f4f4f6;
+    --gray-200: #e8e8ed;
+    --gray-500: #8a8a9a;
+    --gray-700: #4a4a5a;
+    --shadow-lg: 0 20px 60px rgba(10,22,40,0.18);
+    --shadow-md: 0 8px 24px rgba(10,22,40,0.10);
+    --shadow-sm: 0 2px 8px rgba(10,22,40,0.07);
+    --radius: 12px;
+    --radius-sm: 7px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    border-bottom: 2px solid var(--gold);
+    padding: 0 2rem;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: var(--shadow-lg);
+  }
+  .header-inner {
+    max-width: 1400px; margin: 0 auto;
+    display: flex; align-items: center; gap: 1.5rem;
+    height: 72px;
+  }
+  .logo-badge {
+    background: var(--gold);
+    color: var(--navy);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem; font-weight: 500;
+    padding: 0.35rem 0.7rem;
+    border-radius: 4px;
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+  }
+  .header-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem; font-weight: 400;
+    color: var(--cream);
+    flex: 1;
+  }
+  .header-title span { color: var(--gold); }
+  .header-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem; color: var(--gray-500);
+    text-align: right; line-height: 1.6;
+  }
+  #company-name-display {
+    color: var(--gold-light);
+    font-size: 0.8rem;
+  }
+
+  /* ── LAYOUT ── */
+  .app-layout {
+    display: flex; max-width: 1400px; margin: 0 auto;
+    min-height: calc(100vh - 72px);
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 260px; flex-shrink: 0;
+    background: var(--navy-mid);
+    border-right: 1px solid rgba(200,151,42,0.2);
+    padding: 1.5rem 0;
+    display: flex; flex-direction: column;
+  }
+  .sidebar-section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.15em;
+    color: var(--gray-500); text-transform: uppercase;
+    padding: 0.5rem 1.5rem 0.3rem;
+    margin-top: 0.5rem;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.7rem 1.5rem;
+    cursor: pointer; transition: all 0.2s;
+    border-left: 3px solid transparent;
+    font-size: 0.88rem; color: rgba(255,255,255,0.65);
+  }
+  .nav-item:hover { background: rgba(200,151,42,0.08); color: var(--cream); }
+  .nav-item.active {
+    background: rgba(200,151,42,0.12);
+    border-left-color: var(--gold);
+    color: var(--gold-light);
+    font-weight: 600;
+  }
+  .nav-icon { font-size: 1rem; flex-shrink: 0; }
+  .nav-badge {
+    margin-left: auto;
+    background: var(--gold);
+    color: var(--navy);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem; font-weight: 700;
+    padding: 0.15rem 0.45rem;
+    border-radius: 20px;
+    min-width: 20px; text-align: center;
+  }
+  .nav-badge.warn { background: var(--orange); color: #fff; }
+  .nav-badge.ok { background: var(--green); color: #fff; }
+
+  /* ── MAIN ── */
+  main {
+    flex: 1; background: var(--cream); color: var(--navy);
+    overflow-y: auto;
+  }
+
+  .page { display: none; padding: 2rem; animation: fadeIn 0.25s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--navy);
+  }
+  .page-header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.9rem; color: var(--navy);
+  }
+  .page-header p { font-size: 0.85rem; color: var(--gray-700); margin-top: 0.3rem; }
+  .clause-tag {
+    background: var(--navy); color: var(--gold);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem; padding: 0.3rem 0.7rem;
+    border-radius: 4px; flex-shrink: 0;
+    margin-top: 0.4rem;
+  }
+
+  /* ── CARDS ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem; margin-bottom: 2rem;
+  }
+  .card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  .card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .card-icon {
+    width: 42px; height: 42px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  .card-icon.navy { background: var(--navy); }
+  .card-icon.gold { background: var(--gold); }
+  .card-icon.green { background: var(--green); }
+  .card-icon.red { background: var(--red); }
+  .card-icon.orange { background: var(--orange); }
+  .card-title { font-size: 0.9rem; font-weight: 700; color: var(--navy); }
+  .card-subtitle { font-size: 0.75rem; color: var(--gray-500); }
+  .stat-big {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.5rem; color: var(--navy);
+    line-height: 1;
+  }
+  .stat-label { font-size: 0.75rem; color: var(--gray-500); margin-top: 0.25rem; }
+
+  /* ── TABLES ── */
+  .table-wrap {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-200);
+    overflow: hidden; margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .table-toolbar {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--gray-200);
+    background: var(--gray-100);
+    flex-wrap: wrap;
+  }
+  .table-toolbar h3 { font-size: 0.9rem; font-weight: 700; color: var(--navy); flex: 1; }
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    background: var(--navy); color: var(--gold);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.7rem 1rem; text-align: left;
+  }
+  td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--gray-200); font-size: 0.83rem; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f0f4ff; }
+  .empty-row td { text-align: center; color: var(--gray-500); font-style: italic; padding: 2rem; }
+
+  /* ── BADGES / CHIPS ── */
+  .badge {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    padding: 0.2rem 0.6rem; border-radius: 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem; font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .badge-green { background: #d4edda; color: #155724; }
+  .badge-red { background: #f8d7da; color: #721c24; }
+  .badge-orange { background: #fff3cd; color: #856404; }
+  .badge-blue { background: #d0e8ff; color: #084298; }
+  .badge-gray { background: var(--gray-200); color: var(--gray-700); }
+  .badge-navy { background: var(--navy); color: var(--gold); }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.5rem 1rem; border-radius: var(--radius-sm);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.82rem; font-weight: 600;
+    cursor: pointer; border: none; transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .btn-primary { background: var(--navy); color: var(--gold); }
+  .btn-primary:hover { background: var(--navy-light); }
+  .btn-gold { background: var(--gold); color: var(--navy); }
+  .btn-gold:hover { background: var(--gold-light); }
+  .btn-outline {
+    background: transparent;
+    border: 1.5px solid var(--navy);
+    color: var(--navy);
+  }
+  .btn-outline:hover { background: var(--navy); color: var(--white); }
+  .btn-danger { background: var(--red); color: #fff; }
+  .btn-danger:hover { background: #a93226; }
+  .btn-sm { padding: 0.3rem 0.65rem; font-size: 0.75rem; }
+  .btn-icon { padding: 0.4rem; min-width: 0; }
+
+  /* ── FORMS ── */
+  .form-grid { display: grid; gap: 1rem; }
+  .form-grid-2 { grid-template-columns: 1fr 1fr; }
+  .form-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+  .form-group label { font-size: 0.78rem; font-weight: 700; color: var(--navy); }
+  .form-group input, .form-group select, .form-group textarea {
+    padding: 0.55rem 0.8rem;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.85rem; color: var(--navy);
+    background: var(--white); transition: border-color 0.2s;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none; border-color: var(--gold);
+  }
+  .form-group textarea { resize: vertical; min-height: 80px; }
+  .form-row { display: flex; gap: 1rem; align-items: flex-end; }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(10,22,40,0.7);
+    display: none; align-items: center; justify-content: center;
+    padding: 1.5rem;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--white); border-radius: var(--radius);
+    padding: 2rem; max-width: 700px; width: 100%;
+    max-height: 90vh; overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .modal-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem; color: var(--navy);
+    margin-bottom: 0.25rem;
+  }
+  .modal-subtitle { font-size: 0.8rem; color: var(--gray-500); margin-bottom: 1.5rem; }
+  .modal-footer { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--gray-200); }
+
+  /* ── PROGRESS ── */
+  .progress-bar {
+    height: 8px; background: var(--gray-200);
+    border-radius: 4px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 4px;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 100%);
+    transition: width 0.5s ease;
+  }
+
+  /* ── DASHBOARD ── */
+  .dash-hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    border-radius: var(--radius); padding: 2rem;
+    color: var(--white); margin-bottom: 2rem;
+    position: relative; overflow: hidden;
+  }
+  .dash-hero::before {
+    content: '9001';
+    position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%);
+    font-family: 'DM Serif Display', serif;
+    font-size: 8rem; color: rgba(200,151,42,0.08);
+    line-height: 1; pointer-events: none;
+  }
+  .dash-hero h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem; margin-bottom: 0.4rem;
+  }
+  .dash-hero p { font-size: 0.85rem; opacity: 0.75; margin-bottom: 1.5rem; }
+  .dash-stats { display: flex; gap: 2.5rem; flex-wrap: wrap; }
+  .dash-stat-item { }
+  .dash-stat-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 2rem; color: var(--gold);
+    font-weight: 500; line-height: 1;
+  }
+  .dash-stat-lbl { font-size: 0.72rem; opacity: 0.6; margin-top: 0.2rem; }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem; color: var(--navy);
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .section-title::after {
+    content: ''; flex: 1; height: 1px;
+    background: var(--gray-200);
+  }
+
+  /* ── AUDIT VIEW ── */
+  .audit-section {
+    background: var(--white); border-radius: var(--radius);
+    border: 1px solid var(--gray-200); margin-bottom: 1.25rem;
+    overflow: hidden; box-shadow: var(--shadow-sm);
+  }
+  .audit-section-header {
+    background: var(--navy); color: var(--white);
+    padding: 0.9rem 1.25rem;
+    display: flex; align-items: center; gap: 1rem;
+    cursor: pointer;
+  }
+  .audit-clause-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem; color: var(--gold);
+    background: rgba(200,151,42,0.15);
+    padding: 0.15rem 0.5rem; border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .audit-section-title { font-size: 0.9rem; font-weight: 600; flex: 1; }
+  .audit-section-body { padding: 1.25rem; display: none; }
+  .audit-section-body.open { display: block; }
+  .audit-item {
+    display: flex; gap: 0.75rem; align-items: flex-start;
+    padding: 0.65rem 0; border-bottom: 1px solid var(--gray-100);
+  }
+  .audit-item:last-child { border-bottom: none; }
+  .audit-check {
+    width: 20px; height: 20px; border-radius: 4px;
+    border: 2px solid var(--gray-200);
+    flex-shrink: 0; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; transition: all 0.2s;
+    margin-top: 1px;
+  }
+  .audit-check.checked { background: var(--green); border-color: var(--green); color: #fff; }
+  .audit-item-text { font-size: 0.83rem; color: var(--navy); flex: 1; }
+  .audit-item-ref { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--gray-500); }
+
+  /* ── ALERT ── */
+  .alert {
+    padding: 0.9rem 1.2rem; border-radius: var(--radius-sm);
+    font-size: 0.83rem; margin-bottom: 1rem;
+    display: flex; gap: 0.6rem; align-items: flex-start;
+  }
+  .alert-info { background: #d0e8ff; color: #084298; border-left: 4px solid #0d6efd; }
+  .alert-warn { background: #fff3cd; color: #664d03; border-left: 4px solid var(--orange); }
+  .alert-success { background: #d4edda; color: #155724; border-left: 4px solid var(--green); }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: #fff; color: #000; }
+    .sidebar, header, .btn, .modal-overlay { display: none !important; }
+    main { color: #000; }
+    .page { display: block !important; }
+    .card, .table-wrap, .audit-section { break-inside: avoid; }
+  }
+
+  .table-wrap { overflow-x: auto; }
+  #table-docs th, #table-docs td { white-space: nowrap; }
+  #table-docs td:nth-child(3) { white-space: normal; min-width: 180px; max-width: 260px; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(200,151,42,0.4); border-radius: 3px; }
+
+  .divider { height: 1px; background: rgba(200,151,42,0.15); margin: 0.5rem 0; }
+
+  .input-search {
+    padding: 0.45rem 0.8rem;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem; color: var(--navy);
+    background: var(--white); width: 200px;
+  }
+  .input-search:focus { outline: none; border-color: var(--gold); }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<header>
+  <div class="header-inner">
+    <div class="logo-badge">ISO 9001:2015</div>
+    <div class="header-title">SGC — <span>Sistema de Gestión de Calidad</span></div>
+    <div class="header-meta">
+      <div id="company-name-display">Configure la empresa →</div>
+      <div id="current-date-display"></div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════ LAYOUT ═══════════════════════ -->
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section-label">Principal</div>
+    <div class="nav-item active" onclick="showPage('dashboard')">
+      <span class="nav-icon">📊</span> Dashboard
+    </div>
+    <div class="nav-item" onclick="showPage('empresa')">
+      <span class="nav-icon">🏢</span> Contexto Empresa
+    </div>
+
+    <div class="divider"></div>
+    <div class="sidebar-section-label">Cláusulas ISO 9001</div>
+
+    <div class="nav-item" onclick="showPage('politica')">
+      <span class="nav-icon">📜</span> Política y Objetivos
+      <span class="clause-tag-sm" style="margin-left:auto;font-size:.6rem;color:var(--gold)">§5.2</span>
+    </div>
+    <div class="nav-item" onclick="showPage('documentos')">
+      <span class="nav-icon">📁</span> Control Documentos
+      <span id="badge-docs" class="nav-badge">0</span>
+    </div>
+    <div class="nav-item" onclick="showPage('procesos')">
+      <span class="nav-icon">⚙️</span> Mapa de Procesos
+      <span id="badge-proc" class="nav-badge">0</span>
+    </div>
+    <div class="nav-item" onclick="showPage('riesgos')">
+      <span class="nav-icon">⚠️</span> Riesgos &amp; Oportunidades
+      <span id="badge-risk" class="nav-badge warn">0</span>
+    </div>
+    <div class="nav-item" onclick="showPage('indicadores')">
+      <span class="nav-icon">📈</span> Indicadores KPI
+      <span id="badge-kpi" class="nav-badge">0</span>
+    </div>
+    <div class="nav-item" onclick="showPage('noconformidades')">
+      <span class="nav-icon">🔴</span> No Conformidades
+      <span id="badge-nc" class="nav-badge warn">0</span>
+    </div>
+    <div class="nav-item" onclick="showPage('acciones')">
+      <span class="nav-icon">✅</span> Acciones Mejora
+      <span id="badge-acc" class="nav-badge">0</span>
+    </div>
+    <div class="nav-item" onclick="showPage('auditoria')">
+      <span class="nav-icon">🔍</span> Auditoría Interna
+    </div>
+
+    <div class="divider"></div>
+    <div class="sidebar-section-label">Recursos</div>
+    <div class="nav-item" onclick="showPage('partes')">
+      <span class="nav-icon">👥</span> Partes Interesadas
+    </div>
+    <div class="nav-item" onclick="showPage('competencias')">
+      <span class="nav-icon">🎓</span> Competencias Personal
+    </div>
+    <div class="nav-item" onclick="showPage('proveedores')">
+      <span class="nav-icon">🤝</span> Proveedores
+      <span id="badge-prov" class="nav-badge">0</span>
+    </div>
+
+    <div class="divider"></div>
+    <div class="sidebar-section-label">Herramientas</div>
+    <div class="nav-item" onclick="window.open('https://sea-creativeapp.github.io/sgc-calidad/generador_listado_maestro.html','_blank')" style="color:var(--gold-light)">
+      <span class="nav-icon">📂</span> Generador Listado Maestro
+    </div>
+
+    <div class="divider"></div>
+    <div class="nav-item" onclick="exportData()" style="color:var(--gold-light)">
+      <span class="nav-icon">💾</span> Exportar datos
+    </div>
+    <div class="nav-item" onclick="importData()" style="color:var(--gold-light)">
+      <span class="nav-icon">📤</span> Importar datos
+    </div>
+    <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(event)">
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main>
+
+    <!-- ══ DASHBOARD ══ -->
+    <div id="page-dashboard" class="page active">
+      <div class="dash-hero">
+        <h2>Bienvenido al SGC</h2>
+        <p id="dash-empresa-sub">Configure el nombre de su empresa para comenzar</p>
+        <div class="dash-stats">
+          <div class="dash-stat-item">
+            <div class="dash-stat-num" id="ds-docs">0</div>
+            <div class="dash-stat-lbl">Documentos registrados</div>
+          </div>
+          <div class="dash-stat-item">
+            <div class="dash-stat-num" id="ds-proc">0</div>
+            <div class="dash-stat-lbl">Procesos mapeados</div>
+          </div>
+          <div class="dash-stat-item">
+            <div class="dash-stat-num" id="ds-nc">0</div>
+            <div class="dash-stat-lbl">No conformidades abiertas</div>
+          </div>
+          <div class="dash-stat-item">
+            <div class="dash-stat-num" id="ds-kpi">0</div>
+            <div class="dash-stat-lbl">Indicadores KPI</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-info">
+        ℹ️ <div><strong>Guía de uso:</strong> Complete cada módulo con la información documentada de su organización. Los datos se guardan automáticamente en su navegador. Use el módulo de <strong>Auditoría Interna</strong> para preparar la revisión.</div>
+      </div>
+
+      <div class="section-title">Estado por cláusula ISO 9001:2015</div>
+      <div class="cards-grid" id="dash-clauses"></div>
+
+      <div class="section-title">Accesos rápidos</div>
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="showPage('documentos');openModal('modal-doc')">➕ Nuevo documento</button>
+        <button class="btn btn-primary" onclick="showPage('noconformidades');openModal('modal-nc')">🔴 Registrar NC</button>
+        <button class="btn btn-primary" onclick="showPage('riesgos');openModal('modal-risk')">⚠️ Nuevo riesgo</button>
+        <button class="btn btn-gold" onclick="window.print()">🖨️ Imprimir vista actual</button>
+      </div>
+    </div>
+
+    <!-- ══ EMPRESA ══ -->
+    <div id="page-empresa" class="page">
+      <div class="page-header">
+        <div>
+          <h1>Contexto de la Organización</h1>
+          <p>Información general, alcance, misión y visión — Cláusula 4</p>
+        </div>
+        <div class="clause-tag">§ 4.1 – 4.3</div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-toolbar"><h3>Datos de la organización</h3>
+          <button class="btn btn-gold btn-sm" onclick="saveEmpresa()">💾 Guardar</button>
+        </div>
+        <div style="padding:1.5rem">
+          <div class="form-grid form-grid-2" style="gap:1.25rem">
+            <div class="form-group">
+              <label>Nombre de la empresa</label>
+              <input type="text" id="emp-nombre" placeholder="Ej: Soluciones XYZ S.A.S">
+            </div>
+            <div class="form-group">
+              <label>NIT / RUT</label>
+              <input type="text" id="emp-nit" placeholder="900.123.456-7">
+            </div>
+            <div class="form-group">
+              <label>Sector / Actividad económica</label>
+              <input type="text" id="emp-sector" placeholder="Manufactura, servicios, etc.">
+            </div>
+            <div class="form-group">
+              <label>Representante legal / Gerente</label>
+              <input type="text" id="emp-gerente" placeholder="Nombre completo">
+            </div>
+            <div class="form-group">
+              <label>Dirección</label>
+              <input type="text" id="emp-direccion" placeholder="Calle, ciudad, país">
+            </div>
+            <div class="form-group">
+              <label>Versión del SGC</label>
+              <input type="text" id="emp-version" placeholder="v1.0">
+            </div>
+            <div class="form-group" style="grid-column:span 2">
+              <label>Alcance del SGC (Cláusula 4.3)</label>
+              <textarea id="emp-alcance" placeholder="Defina el alcance del sistema de gestión de calidad, los productos y/o servicios incluidos, y las exclusiones justificadas..."></textarea>
+            </div>
+            <div class="form-group" style="grid-column:span 2">
+              <label>Misión</label>
+              <textarea id="emp-mision" placeholder="Misión de la organización..."></textarea>
+            </div>
+            <div class="form-group" style="grid-column:span 2">
+              <label>Visión</label>
+              <textarea id="emp-vision" placeholder="Visión de la organización..."></textarea>
+            </div>
+            <div class="form-group" style="grid-column:span 2">
+              <label>Contexto interno (fortalezas, capacidades, cultura)</label>
+              <textarea id="emp-ctx-interno" placeholder="Factores internos relevantes..."></textarea>
+            </div>
+            <div class="form-group" style="grid-column:span 2">
+              <label>Contexto externo (mercado, regulaciones, competencia)</label>
+              <textarea id="emp-ctx-externo" placeholder="Factores externos relevantes..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ POLÍTICA Y OBJETIVOS ══ -->
+    <div id="page-politica" class="page">
+      <div class="page-header">
+        <div><h1>Política y Objetivos de Calidad</h1>
+          <p>Documentación requerida por cláusula 5.2 y 6.2</p></div>
+        <div class="clause-tag">§ 5.2 – 6.2</div>
+      </div>
+      <div class="table-wrap" style="margin-bottom:1.5rem">
+        <div class="table-toolbar"><h3>Política de Calidad</h3>
+          <button class="btn btn-gold btn-sm" onclick="savePolitica()">💾 Guardar</button>
+        </div>
+        <div style="padding:1.5rem">
+          <div class="form-group">
+            <label>Declaración de la Política de Calidad</label>
+            <textarea id="pol-texto" style="min-height:140px" placeholder="Redacte aquí la política de calidad de la organización. Debe incluir: compromiso con la satisfacción del cliente, mejora continua y cumplimiento de requisitos..."></textarea>
+          </div>
+          <div class="form-grid form-grid-2" style="margin-top:1rem">
+            <div class="form-group"><label>Fecha de aprobación</label><input type="date" id="pol-fecha"></div>
+            <div class="form-group"><label>Aprobado por</label><input type="text" id="pol-aprobador" placeholder="Cargo / nombre"></div>
+          </div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <h3>Objetivos de Calidad</h3>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-obj')">➕ Nuevo objetivo</button>
+        </div>
+        <table>
+          <thead><tr>
+            <th>Código</th><th>Objetivo</th><th>Indicador</th><th>Meta</th>
+            <th>Responsable</th><th>Plazo</th><th>Estado</th><th></th>
+          </tr></thead>
+          <tbody id="tbody-obj">
+            <tr class="empty-row"><td colspan="8">No hay objetivos registrados</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ CONTROL DE DOCUMENTOS ══ -->
+    <div id="page-documentos" class="page">
+      <div class="page-header">
+        <div><h1>Control de Información Documentada</h1>
+          <p>Listado Maestro de Documentos y Registros — Cláusula 7.5</p></div>
+        <div class="clause-tag">§ 7.5</div>
+      </div>
+
+      <!-- Guía Google Drive -->
+      <div class="alert alert-info" id="drive-guide">
+        <div>
+          <strong>📁 ¿Cómo vincular documentos de Google Drive?</strong><br>
+          <span style="font-size:0.8rem">
+            1. Abra el archivo en Google Drive → clic derecho → <strong>"Obtener enlace"</strong><br>
+            2. Cambie el acceso a <strong>"Cualquier persona con el enlace"</strong> (o solo su organización)<br>
+            3. Copie el enlace y péguelo en el campo <strong>"Enlace Google Drive"</strong> al registrar el documento<br>
+            4. El botón 📎 aparecerá en el listado para abrir el archivo directamente.
+          </span>
+          <button class="btn btn-sm btn-outline" style="margin-top:0.5rem" onclick="this.closest('.alert').style.display='none'">Entendido ✓</button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <h3>Listado Maestro de Documentos</h3>
+          <input class="input-search" type="text" placeholder="🔍 Buscar..." oninput="filterTable('tbody-docs',this.value)">
+          <select id="filter-tipo-doc" onchange="filterDocsByTipo(this.value)" style="padding:0.45rem 0.7rem;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:0.82rem;color:var(--navy)">
+            <option value="">Todos los tipos</option>
+            <option>Procedimiento</option><option>Instructivo</option><option>Manual</option>
+            <option>Formato / Registro</option><option>Política</option><option>Plan</option>
+            <option>Protocolo</option><option>Otro</option>
+          </select>
+          <button class="btn btn-outline btn-sm" onclick="exportListadoMaestro()">📄 Exportar listado</button>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-doc')">➕ Nuevo documento</button>
+        </div>
+        <table id="table-docs">
+          <thead><tr>
+            <th>#</th><th>Código</th><th>Título del documento</th><th>Tipo</th><th>Versión</th>
+            <th>Fecha emisión</th><th>Próx. revisión</th><th>Elaboró</th><th>Revisó</th>
+            <th>Aprobó</th><th>Estado</th><th>Archivo</th><th>Acciones</th>
+          </tr></thead>
+          <tbody id="tbody-docs">
+            <tr class="empty-row"><td colspan="13">No hay documentos registrados</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Resumen por tipo -->
+      <div class="section-title" style="margin-top:1.5rem">Resumen por tipo de documento</div>
+      <div class="cards-grid" id="docs-summary-cards" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr))"></div>
+    </div>
+
+    <!-- ══ PROCESOS ══ -->
+    <div id="page-procesos" class="page">
+      <div class="page-header">
+        <div><h1>Mapa de Procesos</h1>
+          <p>Caracterización y seguimiento de procesos — Cláusula 4.4 y 8</p></div>
+        <div class="clause-tag">§ 4.4 – 8</div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <h3>Procesos del SGC</h3>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-proc')">➕ Nuevo proceso</button>
+        </div>
+        <table>
+          <thead><tr>
+            <th>Código</th><th>Proceso</th><th>Tipo</th><th>Objetivo</th>
+            <th>Responsable</th><th>Indicador</th><th>Recursos</th><th>Acciones</th>
+          </tr></thead>
+          <tbody id="tbody-proc">
+            <tr class="empty-row"><td colspan="8">No hay procesos registrados</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ RIESGOS ══ -->
+    <div id="page-riesgos" class="page">
+      <div class="page-header">
+        <div><h1>Riesgos y Oportunidades</h1>
+          <p>Pensamiento basado en riesgos — Cláusula 6.1</p></div>
+        <div class="clause-tag">§ 6.1</div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <h3>Matriz de Riesgos y Oportunidades</h3>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-risk')">➕ Nuevo registro</button>
+        </div>
+        <table>
+          <thead><tr>
+            <th>ID</th><th>Descripción</th><th>Tipo</th><th>Proceso</th>
+            <th>Probabilidad</th><th>Impacto</th><th>Nivel</th><th>Acción</th><th>Responsable</th><th>Estado</th><th></th>
+          </tr></thead>
+          <tbody id="tbody-risk">
+            <tr class="empty-row"><td colspan="11">No hay riesgos registrados</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ INDICADORES KPI ══ -->
+    <div id="page-indicadores" class="page">
+      <div class="page-header">
+        <div><h1>Indicadores de Desempeño (KPI)</h1>
+          <p>Seguimiento y medición — Cláusula 9.1</p></div>
+        <div class="clause-tag">§ 9.1</div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <h3>Tablero de Indicadores</h3>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-kpi')">➕ Nuevo KPI</button>
+        </div>
+        <table>
+          <thead><tr>
+            <th>Código</th><th>Nombre</th><th>Proceso</th><th>Fórmula</th>
+            <th>Frecuencia</th><th>Meta</th><th>Resultado</th><th>Cumplimiento</th><th>Responsable</th><th></th>
+          </tr></thead>
+          <tbody id="tbody-kpi">
+            <tr class="empty-row"><td colspan="10">No hay KPIs registrados</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ NO CONFORMIDADES ══ -->
+    <div id="page-noconformidades" class="page">
+      <div class="page-header">
+        <div><h1>No Conformidades y Acciones Correctivas</h1>
+          <p>Gestión de no conformidades — Cláusula 10.2</p></div>
+        <div class="clause-tag">§ 10.2</div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <h3>Registro de No Conformidades</h3>
+          <input class="input-search" type="text" placeholder="🔍 Buscar..." oninput="filterTable('tbody-nc',this.value)">
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-nc')">➕ Nueva NC</button>
+        </div>
+        <table>
+          <thead><tr>
+            <th>NC-ID</th><th>Descripción</th><th>Origen</th><th>Proceso</th>
+            <th>Fecha</th><th>Responsable</th><th>Causa raíz</th><th>Acción correctiva</th>
+            <th>Fecha cierre</th><th>Estado</th><th></th>
+          </tr></thead>
+          <tbody id="tbody-nc">
+            <tr class="empty-row"><td colspan="11">No hay no conformidades registradas</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ ACCIONES DE MEJORA ══ -->
+    <div id="page-acciones" class="page">
+      <div class="page-header">
+        <div><h1>Acciones de Mejora Continua</h1>
+          <p>Mejora continua — Cláusula 10.3</p></div>
+        <div class="clause-tag">§ 10.3</div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <h3>Plan de Mejora</h3>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-acc')">➕ Nueva acción</button>
+        </div>
+        <table>
+          <thead><tr>
+            <th>ID</th><th>Acción</th><th>Origen</th><th>Proceso</th>
+            <th>Responsable</th><th>Fecha inicio</th><th>Fecha límite</th><th>Avance</th><th>Estado</th><th></th>
+          </tr></thead>
+          <tbody id="tbody-acc">
+            <tr class="empty-row"><td colspan="10">No hay acciones registradas</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ AUDITORÍA INTERNA ══ -->
+    <div id="page-auditoria" class="page">
+      <div class="page-header">
+        <div><h1>Auditoría Interna</h1>
+          <p>Lista de verificación para preparación de auditoría — Cláusula 9.2</p></div>
+        <div class="clause-tag">§ 9.2</div>
+      </div>
+      <div class="alert alert-warn">
+        ⚠️ Complete las verificaciones marcando cada ítem. Esta lista puede imprimirse para presentar en auditoría.
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+        <div>
+          <span style="font-size:0.82rem;color:var(--gray-700)">Progreso de verificación: </span>
+          <strong id="audit-progress-pct">0%</strong>
+        </div>
+        <div style="display:flex;gap:0.5rem">
+          <button class="btn btn-outline btn-sm" onclick="resetAudit()">🔄 Resetear</button>
+          <button class="btn btn-gold btn-sm" onclick="window.print()">🖨️ Imprimir</button>
+        </div>
+      </div>
+      <div class="progress-bar" style="margin-bottom:1.5rem">
+        <div class="progress-fill" id="audit-progress-bar" style="width:0%"></div>
+      </div>
+      <div id="audit-sections"></div>
+    </div>
+
+    <!-- ══ PARTES INTERESADAS ══ -->
+    <div id="page-partes" class="page">
+      <div class="page-header">
+        <div><h1>Partes Interesadas</h1>
+          <p>Comprensión de necesidades — Cláusula 4.2</p></div>
+        <div class="clause-tag">§ 4.2</div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <h3>Registro de Partes Interesadas</h3>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-parte')">➕ Nueva parte</button>
+        </div>
+        <table>
+          <thead><tr>
+            <th>Parte interesada</th><th>Tipo</th><th>Necesidades y expectativas</th>
+            <th>Requisitos relevantes</th><th>Seguimiento</th><th></th>
+          </tr></thead>
+          <tbody id="tbody-partes">
+            <tr class="empty-row"><td colspan="6">No hay partes registradas</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ COMPETENCIAS ══ -->
+    <div id="page-competencias" class="page">
+      <div class="page-header">
+        <div><h1>Competencias del Personal</h1>
+          <p>Competencia, toma de conciencia, capacitación — Cláusula 7.2</p></div>
+        <div class="clause-tag">§ 7.2</div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <h3>Matriz de Competencias</h3>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-comp')">➕ Nuevo registro</button>
+        </div>
+        <table>
+          <thead><tr>
+            <th>Nombre</th><th>Cargo</th><th>Educación</th><th>Formación</th>
+            <th>Experiencia</th><th>Habilidades</th><th>Estado</th><th></th>
+          </tr></thead>
+          <tbody id="tbody-comp">
+            <tr class="empty-row"><td colspan="8">No hay competencias registradas</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ PROVEEDORES ══ -->
+    <div id="page-proveedores" class="page">
+      <div class="page-header">
+        <div><h1>Control de Proveedores Externos</h1>
+          <p>Proveedores y procesos externalizados — Cláusula 8.4</p></div>
+        <div class="clause-tag">§ 8.4</div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <h3>Lista de Proveedores Aprobados</h3>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-prov')">➕ Nuevo proveedor</button>
+        </div>
+        <table>
+          <thead><tr>
+            <th>Proveedor</th><th>Producto/Servicio</th><th>Criterio selección</th>
+            <th>Evaluación</th><th>Calificación</th><th>Estado</th><th></th>
+          </tr></thead>
+          <tbody id="tbody-prov">
+            <tr class="empty-row"><td colspan="7">No hay proveedores registrados</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ═══════════════════════ MODALS ═══════════════════════ -->
+
+<!-- Documento -->
+<div class="modal-overlay" id="modal-doc">
+  <div class="modal">
+    <div class="modal-title">Registrar Documento</div>
+    <div class="modal-subtitle">Información documentada — Cláusula 7.5</div>
+    <div class="form-grid form-grid-2">
+      <div class="form-group"><label>Código del documento *</label><input id="d-codigo" placeholder="SGC-PO-001"></div>
+      <div class="form-group"><label>Título *</label><input id="d-titulo" placeholder="Nombre del documento"></div>
+      <div class="form-group"><label>Tipo</label>
+        <select id="d-tipo">
+          <option>Procedimiento</option><option>Instructivo</option><option>Manual</option>
+          <option>Formato / Registro</option><option>Política</option><option>Plan</option>
+          <option>Protocolo</option><option>Otro</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Versión</label><input id="d-version" placeholder="v1.0"></div>
+      <div class="form-group"><label>Fecha de emisión</label><input type="date" id="d-fecha"></div>
+      <div class="form-group"><label>Próxima revisión</label><input type="date" id="d-proxima"></div>
+      <div class="form-group"><label>Elaborado por</label><input id="d-elabora" placeholder="Nombre / cargo"></div>
+      <div class="form-group"><label>Revisado por</label><input id="d-revisa" placeholder="Nombre / cargo"></div>
+      <div class="form-group"><label>Aprobado por</label><input id="d-aprueba" placeholder="Nombre / cargo"></div>
+      <div class="form-group"><label>Estado</label>
+        <select id="d-estado">
+          <option>Vigente</option><option>En revisión</option><option>Obsoleto</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Proceso asociado</label><input id="d-proceso" placeholder="Proceso al que pertenece"></div>
+      <div class="form-group"><label>Ubicación física (si aplica)</label><input id="d-ubicacion" placeholder="Carpeta, archivador, etc."></div>
+      <div class="form-group" style="grid-column:span 2">
+        <label>🔗 Enlace Google Drive (PDF, Word o Excel)</label>
+        <div style="display:flex;gap:0.5rem;align-items:center">
+          <input id="d-drive" placeholder="https://drive.google.com/file/d/..." style="flex:1">
+          <button type="button" class="btn btn-outline btn-sm" onclick="testDriveLink()" title="Probar enlace">🔍 Probar</button>
+        </div>
+        <small style="color:var(--gray-500);font-size:0.72rem;margin-top:0.2rem;display:block">
+          Pegue aquí el enlace de Google Drive con acceso compartido
+        </small>
+      </div>
+      <div class="form-group" style="grid-column:span 2"><label>Descripción / Alcance</label>
+        <textarea id="d-desc" placeholder="Breve descripción del documento..."></textarea>
+      </div>
+      <div class="form-group" style="grid-column:span 2"><label>Palabras clave (para búsqueda)</label>
+        <input id="d-keywords" placeholder="calidad, proceso, cliente, etc.">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-doc')">Cancelar</button>
+      <button class="btn btn-gold" onclick="saveDoc()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Proceso -->
+<div class="modal-overlay" id="modal-proc">
+  <div class="modal">
+    <div class="modal-title">Registrar Proceso</div>
+    <div class="modal-subtitle">Mapa de procesos — Cláusula 4.4</div>
+    <div class="form-grid form-grid-2">
+      <div class="form-group"><label>Código</label><input id="p-codigo" placeholder="P-01"></div>
+      <div class="form-group"><label>Nombre del proceso</label><input id="p-nombre" placeholder="Gestión de calidad"></div>
+      <div class="form-group"><label>Tipo de proceso</label>
+        <select id="p-tipo">
+          <option>Estratégico</option><option>Misional / Core</option><option>Soporte / Apoyo</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Responsable del proceso</label><input id="p-resp" placeholder="Cargo"></div>
+      <div class="form-group" style="grid-column:span 2"><label>Objetivo del proceso</label><textarea id="p-obj" placeholder="¿Qué se busca lograr?"></textarea></div>
+      <div class="form-group"><label>Entradas (insumos)</label><textarea id="p-entradas" placeholder="Lista de entradas..."></textarea></div>
+      <div class="form-group"><label>Salidas (productos/servicios)</label><textarea id="p-salidas" placeholder="Lista de salidas..."></textarea></div>
+      <div class="form-group"><label>Indicador de seguimiento</label><input id="p-indicador" placeholder="Ej: % cumplimiento"></div>
+      <div class="form-group"><label>Recursos necesarios</label><input id="p-recursos" placeholder="Personal, equipo, etc."></div>
+      <div class="form-group" style="grid-column:span 2"><label>Documentos asociados</label><input id="p-docs" placeholder="Códigos de documentos relacionados"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-proc')">Cancelar</button>
+      <button class="btn btn-gold" onclick="saveProc()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Riesgo -->
+<div class="modal-overlay" id="modal-risk">
+  <div class="modal">
+    <div class="modal-title">Registrar Riesgo u Oportunidad</div>
+    <div class="modal-subtitle">Pensamiento basado en riesgos — Cláusula 6.1</div>
+    <div class="form-grid form-grid-2">
+      <div class="form-group"><label>Tipo</label>
+        <select id="r-tipo">
+          <option>Riesgo</option><option>Oportunidad</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Proceso asociado</label><input id="r-proceso" placeholder="Nombre del proceso"></div>
+      <div class="form-group" style="grid-column:span 2"><label>Descripción</label><textarea id="r-desc" placeholder="Describa el riesgo u oportunidad..."></textarea></div>
+      <div class="form-group"><label>Probabilidad</label>
+        <select id="r-prob">
+          <option value="1">1 – Muy baja</option><option value="2">2 – Baja</option>
+          <option value="3">3 – Media</option><option value="4">4 – Alta</option><option value="5">5 – Muy alta</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Impacto</label>
+        <select id="r-impacto">
+          <option value="1">1 – Muy bajo</option><option value="2">2 – Bajo</option>
+          <option value="3">3 – Medio</option><option value="4">4 – Alto</option><option value="5">5 – Muy alto</option>
+        </select>
+      </div>
+      <div class="form-group" style="grid-column:span 2"><label>Plan de acción / Tratamiento</label><textarea id="r-accion" placeholder="¿Qué acciones se tomarán?"></textarea></div>
+      <div class="form-group"><label>Responsable</label><input id="r-resp" placeholder="Cargo / nombre"></div>
+      <div class="form-group"><label>Fecha límite</label><input type="date" id="r-fecha"></div>
+      <div class="form-group"><label>Estado</label>
+        <select id="r-estado"><option>Identificado</option><option>En tratamiento</option><option>Tratado</option><option>Aceptado</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-risk')">Cancelar</button>
+      <button class="btn btn-gold" onclick="saveRisk()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- KPI -->
+<div class="modal-overlay" id="modal-kpi">
+  <div class="modal">
+    <div class="modal-title">Registrar Indicador KPI</div>
+    <div class="modal-subtitle">Seguimiento y medición — Cláusula 9.1</div>
+    <div class="form-grid form-grid-2">
+      <div class="form-group"><label>Código</label><input id="k-codigo" placeholder="KPI-01"></div>
+      <div class="form-group"><label>Nombre del indicador</label><input id="k-nombre" placeholder="Satisfacción del cliente"></div>
+      <div class="form-group"><label>Proceso</label><input id="k-proceso" placeholder="Proceso al que pertenece"></div>
+      <div class="form-group"><label>Frecuencia de medición</label>
+        <select id="k-freq"><option>Diaria</option><option>Semanal</option><option>Mensual</option><option>Trimestral</option><option>Semestral</option><option>Anual</option></select>
+      </div>
+      <div class="form-group" style="grid-column:span 2"><label>Fórmula de cálculo</label><input id="k-formula" placeholder="Ej: (Clientes satisfechos / Total clientes) × 100"></div>
+      <div class="form-group"><label>Meta</label><input id="k-meta" placeholder="Ej: ≥ 90%"></div>
+      <div class="form-group"><label>Resultado actual</label><input id="k-resultado" placeholder="Ej: 87%"></div>
+      <div class="form-group"><label>Responsable</label><input id="k-resp" placeholder="Cargo / nombre"></div>
+      <div class="form-group"><label>Fuente de datos</label><input id="k-fuente" placeholder="De dónde se obtiene el dato"></div>
+      <div class="form-group" style="grid-column:span 2"><label>Observaciones</label><textarea id="k-obs" placeholder="Notas adicionales..."></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-kpi')">Cancelar</button>
+      <button class="btn btn-gold" onclick="saveKpi()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- No Conformidad -->
+<div class="modal-overlay" id="modal-nc">
+  <div class="modal">
+    <div class="modal-title">Registrar No Conformidad</div>
+    <div class="modal-subtitle">Acciones correctivas — Cláusula 10.2</div>
+    <div class="form-grid form-grid-2">
+      <div class="form-group"><label>Fecha de detección</label><input type="date" id="nc-fecha"></div>
+      <div class="form-group"><label>Origen</label>
+        <select id="nc-origen"><option>Auditoría interna</option><option>Queja del cliente</option><option>Inspección</option><option>Proceso interno</option><option>Auditoría externa</option><option>Otro</option></select>
+      </div>
+      <div class="form-group" style="grid-column:span 2"><label>Descripción de la no conformidad</label><textarea id="nc-desc" placeholder="Describa detalladamente la no conformidad detectada..."></textarea></div>
+      <div class="form-group"><label>Proceso afectado</label><input id="nc-proceso" placeholder="Proceso"></div>
+      <div class="form-group"><label>Requisito incumplido (cláusula)</label><input id="nc-requisito" placeholder="Ej: 7.5.3, 8.2.1"></div>
+      <div class="form-group" style="grid-column:span 2"><label>Causa raíz (análisis)</label><textarea id="nc-causa" placeholder="¿Por qué ocurrió? (5 Porqués, Ishikawa, etc.)"></textarea></div>
+      <div class="form-group" style="grid-column:span 2"><label>Acción correctiva propuesta</label><textarea id="nc-accion" placeholder="Describir las acciones para eliminar la causa raíz..."></textarea></div>
+      <div class="form-group"><label>Responsable</label><input id="nc-resp" placeholder="Cargo / nombre"></div>
+      <div class="form-group"><label>Fecha de cierre prevista</label><input type="date" id="nc-fechacierre"></div>
+      <div class="form-group"><label>Estado</label>
+        <select id="nc-estado"><option>Abierta</option><option>En proceso</option><option>Cerrada</option><option>Reincidente</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-nc')">Cancelar</button>
+      <button class="btn btn-danger" onclick="saveNc()">💾 Guardar NC</button>
+    </div>
+  </div>
+</div>
+
+<!-- Acción de Mejora -->
+<div class="modal-overlay" id="modal-acc">
+  <div class="modal">
+    <div class="modal-title">Registrar Acción de Mejora</div>
+    <div class="modal-subtitle">Mejora continua — Cláusula 10.3</div>
+    <div class="form-grid form-grid-2">
+      <div class="form-group" style="grid-column:span 2"><label>Descripción de la acción</label><textarea id="a-desc" placeholder="Describa la acción de mejora..."></textarea></div>
+      <div class="form-group"><label>Origen</label>
+        <select id="a-origen"><option>Revisión por la dirección</option><option>Análisis de datos</option><option>Sugerencia</option><option>Benchmarking</option><option>Otro</option></select>
+      </div>
+      <div class="form-group"><label>Proceso</label><input id="a-proceso" placeholder="Proceso beneficiado"></div>
+      <div class="form-group"><label>Responsable</label><input id="a-resp" placeholder="Cargo / nombre"></div>
+      <div class="form-group"><label>Fecha de inicio</label><input type="date" id="a-inicio"></div>
+      <div class="form-group"><label>Fecha límite</label><input type="date" id="a-limite"></div>
+      <div class="form-group"><label>% Avance</label><input type="number" id="a-avance" min="0" max="100" placeholder="0"></div>
+      <div class="form-group"><label>Estado</label>
+        <select id="a-estado"><option>Pendiente</option><option>En ejecución</option><option>Completada</option><option>Cancelada</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-acc')">Cancelar</button>
+      <button class="btn btn-gold" onclick="saveAcc()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Objetivo -->
+<div class="modal-overlay" id="modal-obj">
+  <div class="modal">
+    <div class="modal-title">Registrar Objetivo de Calidad</div>
+    <div class="modal-subtitle">Objetivos — Cláusula 6.2</div>
+    <div class="form-grid form-grid-2">
+      <div class="form-group"><label>Código</label><input id="o-codigo" placeholder="OBJ-01"></div>
+      <div class="form-group"><label>Proceso</label><input id="o-proceso" placeholder="Proceso relacionado"></div>
+      <div class="form-group" style="grid-column:span 2"><label>Objetivo de calidad</label><textarea id="o-desc" placeholder="Describa el objetivo..."></textarea></div>
+      <div class="form-group"><label>Indicador de medición</label><input id="o-indicador" placeholder="Cómo se medirá"></div>
+      <div class="form-group"><label>Meta</label><input id="o-meta" placeholder="Valor objetivo"></div>
+      <div class="form-group"><label>Responsable</label><input id="o-resp" placeholder="Cargo / nombre"></div>
+      <div class="form-group"><label>Plazo</label><input type="date" id="o-plazo"></div>
+      <div class="form-group"><label>Recursos requeridos</label><input id="o-recursos" placeholder="Recursos necesarios"></div>
+      <div class="form-group"><label>Estado</label>
+        <select id="o-estado"><option>En curso</option><option>Cumplido</option><option>No cumplido</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-obj')">Cancelar</button>
+      <button class="btn btn-gold" onclick="saveObj()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Parte interesada -->
+<div class="modal-overlay" id="modal-parte">
+  <div class="modal">
+    <div class="modal-title">Registrar Parte Interesada</div>
+    <div class="modal-subtitle">Partes interesadas — Cláusula 4.2</div>
+    <div class="form-grid form-grid-2">
+      <div class="form-group"><label>Parte interesada</label><input id="pi-nombre" placeholder="Ej: Clientes, empleados..."></div>
+      <div class="form-group"><label>Tipo</label>
+        <select id="pi-tipo"><option>Interna</option><option>Externa</option></select>
+      </div>
+      <div class="form-group" style="grid-column:span 2"><label>Necesidades y expectativas</label><textarea id="pi-necesidades" placeholder="¿Qué espera esta parte?"></textarea></div>
+      <div class="form-group" style="grid-column:span 2"><label>Requisitos relevantes para el SGC</label><textarea id="pi-requisitos" placeholder="Requisitos legales, contractuales..."></textarea></div>
+      <div class="form-group"><label>Mecanismo de seguimiento</label><input id="pi-seguimiento" placeholder="Cómo se hace seguimiento"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-parte')">Cancelar</button>
+      <button class="btn btn-gold" onclick="saveParte()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Competencia -->
+<div class="modal-overlay" id="modal-comp">
+  <div class="modal">
+    <div class="modal-title">Registrar Competencia del Personal</div>
+    <div class="modal-subtitle">Competencia — Cláusula 7.2</div>
+    <div class="form-grid form-grid-2">
+      <div class="form-group"><label>Nombre del empleado</label><input id="c-nombre" placeholder="Nombre completo"></div>
+      <div class="form-group"><label>Cargo</label><input id="c-cargo" placeholder="Puesto de trabajo"></div>
+      <div class="form-group"><label>Educación</label><input id="c-edu" placeholder="Nivel educativo, título"></div>
+      <div class="form-group"><label>Formación recibida</label><input id="c-form" placeholder="Capacitaciones, cursos"></div>
+      <div class="form-group"><label>Experiencia</label><input id="c-exp" placeholder="Años y área de experiencia"></div>
+      <div class="form-group"><label>Habilidades clave</label><input id="c-hab" placeholder="Competencias específicas"></div>
+      <div class="form-group"><label>Estado de competencia</label>
+        <select id="c-estado"><option>Competente</option><option>En formación</option><option>Requiere capacitación</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-comp')">Cancelar</button>
+      <button class="btn btn-gold" onclick="saveComp()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Proveedor -->
+<div class="modal-overlay" id="modal-prov">
+  <div class="modal">
+    <div class="modal-title">Registrar Proveedor</div>
+    <div class="modal-subtitle">Control de proveedores externos — Cláusula 8.4</div>
+    <div class="form-grid form-grid-2">
+      <div class="form-group"><label>Nombre del proveedor</label><input id="pv-nombre" placeholder="Razón social"></div>
+      <div class="form-group"><label>Producto / Servicio</label><input id="pv-producto" placeholder="Lo que suministra"></div>
+      <div class="form-group" style="grid-column:span 2"><label>Criterio de selección</label><textarea id="pv-criterio" placeholder="¿Por qué fue seleccionado?"></textarea></div>
+      <div class="form-group"><label>Última evaluación</label><input type="date" id="pv-fecha"></div>
+      <div class="form-group"><label>Calificación (0-100)</label><input type="number" id="pv-calif" min="0" max="100" placeholder="85"></div>
+      <div class="form-group"><label>Estado</label>
+        <select id="pv-estado"><option>Aprobado</option><option>Condicionado</option><option>No aprobado</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-prov')">Cancelar</button>
+      <button class="btn btn-gold" onclick="saveProv()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════ STATE ══════════════════
+let DB = {
+  empresa: {}, politica: {}, objetivos: [],
+  documentos: [], procesos: [], riesgos: [], kpis: [],
+  noConformidades: [], acciones: [], partes: [],
+  competencias: [], proveedores: [], auditChecks: {}
+};
+
+function save() { localStorage.setItem('sgc_iso9001', JSON.stringify(DB)); }
+function load() {
+  const raw = localStorage.getItem('sgc_iso9001');
+  if (raw) { try { DB = JSON.parse(raw); } catch(e){} }
+}
+
+// ══════════════════ NAV ══════════════════
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'"))
+      n.classList.add('active');
+  });
+  if (id === 'dashboard') renderDashboard();
+  if (id === 'auditoria') renderAudit();
+}
+
+// ══════════════════ MODAL ══════════════════
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if(e.target === m) m.classList.remove('open'); });
+});
+
+// ══════════════════ EMPRESA ══════════════════
+function saveEmpresa() {
+  DB.empresa = {
+    nombre: v('emp-nombre'), nit: v('emp-nit'), sector: v('emp-sector'),
+    gerente: v('emp-gerente'), direccion: v('emp-direccion'), version: v('emp-version'),
+    alcance: v('emp-alcance'), mision: v('emp-mision'), vision: v('emp-vision'),
+    ctxInterno: v('emp-ctx-interno'), ctxExterno: v('emp-ctx-externo')
+  };
+  save(); updateHeader(); alert('✅ Datos de la empresa guardados');
+}
+function loadEmpresa() {
+  const e = DB.empresa;
+  if (!e) return;
+  Object.entries(e).forEach(([k,val]) => {
+    const map = { nombre:'emp-nombre', nit:'emp-nit', sector:'emp-sector', gerente:'emp-gerente',
+      direccion:'emp-direccion', version:'emp-version', alcance:'emp-alcance',
+      mision:'emp-mision', vision:'emp-vision', ctxInterno:'emp-ctx-interno', ctxExterno:'emp-ctx-externo' };
+    if (map[k]) { const el=document.getElementById(map[k]); if(el) el.value=val||''; }
+  });
+}
+
+// ══════════════════ POLÍTICA ══════════════════
+function savePolitica() {
+  DB.politica = { texto: v('pol-texto'), fecha: v('pol-fecha'), aprobador: v('pol-aprobador') };
+  save(); alert('✅ Política guardada');
+}
+function loadPolitica() {
+  const p = DB.politica;
+  if (!p) return;
+  sv('pol-texto', p.texto); sv('pol-fecha', p.fecha); sv('pol-aprobador', p.aprobador);
+}
+
+// ══════════════════ GENÉRICOS ══════════════════
+function v(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function sv(id, val) { const el = document.getElementById(id); if(el) el.value = val||''; }
+function uid() { return Date.now().toString(36) + Math.random().toString(36).substr(2,4); }
+
+function statusBadge(s) {
+  const map = {
+    'Vigente':'green','Aprobado':'green','Competente':'green','Cumplido':'green','Completada':'green','Tratado':'green','Cerrada':'green',
+    'En revisión':'orange','En tratamiento':'orange','En proceso':'orange','En ejecución':'orange','En formación':'orange','En curso':'orange','Condicionado':'orange',
+    'Obsoleto':'red','No aprobado':'red','No cumplido':'red','Abierta':'red','Reincidente':'red','Cancelada':'red','Requiere capacitación':'red',
+    'Identificado':'blue','Pendiente':'blue','Aceptado':'blue',
+    'default':'gray'
+  };
+  const cls = map[s] || map['default'];
+  return `<span class="badge badge-${cls}">${s}</span>`;
+}
+
+function riskLevel(p, i) {
+  const n = p * i;
+  if (n <= 4) return '<span class="badge badge-green">Bajo</span>';
+  if (n <= 9) return '<span class="badge badge-orange">Medio</span>';
+  if (n <= 16) return '<span class="badge badge-red">Alto</span>';
+  return '<span class="badge badge-red" style="background:#7b0000">Crítico</span>';
+}
+
+function emptyRow(cols, msg='No hay registros') {
+  return `<tr class="empty-row"><td colspan="${cols}">${msg}</td></tr>`;
+}
+
+// ══════════════════ DOCUMENTOS ══════════════════
+function saveDoc() {
+  const doc = {
+    id: uid(), codigo: v('d-codigo'), titulo: v('d-titulo'), tipo: v('d-tipo'),
+    version: v('d-version'), fecha: v('d-fecha'), proxima: v('d-proxima'),
+    elabora: v('d-elabora'), revisa: v('d-revisa'), aprueba: v('d-aprueba'),
+    estado: v('d-estado'), desc: v('d-desc'),
+    drive: v('d-drive'), proceso: v('d-proceso'),
+    ubicacion: v('d-ubicacion'), keywords: v('d-keywords')
+  };
+  if (!doc.codigo || !doc.titulo) { alert('Complete código y título'); return; }
+  DB.documentos.push(doc); save(); renderDocs(); closeModal('modal-doc'); clearModal('d-');
+}
+
+function getFileIcon(drive) {
+  if (!drive) return '';
+  if (drive.includes('spreadsheet') || drive.includes('.xlsx')) return '📊';
+  if (drive.includes('document') || drive.includes('.docx')) return '📝';
+  return '📄';
+}
+
+function isDocVencido(proxima) {
+  if (!proxima) return false;
+  return new Date(proxima) < new Date();
+}
+
+function renderDocs() {
+  const tb = document.getElementById('tbody-docs');
+  if (!DB.documentos.length) {
+    tb.innerHTML = emptyRow(13);
+    updateBadge('badge-docs', 0);
+    renderDocsSummary();
+    return;
+  }
+  tb.innerHTML = DB.documentos.map((d, i) => {
+    const vencido = isDocVencido(d.proxima);
+    const driveBtn = d.drive
+      ? `<a href="${d.drive}" target="_blank" rel="noopener" class="btn btn-gold btn-sm" title="Abrir en Google Drive">${getFileIcon(d.drive)} Abrir</a>`
+      : `<span style="color:var(--gray-500);font-size:0.75rem">Sin enlace</span>`;
+    const alertVenc = vencido
+      ? `<span class="badge badge-red" title="Revisión vencida">⚠️ Vencido</span> ` : '';
+    return `<tr>
+      <td style="color:var(--gray-500);font-family:'DM Mono',monospace;font-size:0.7rem">${i+1}</td>
+      <td><span class="badge badge-navy">${d.codigo}</span></td>
+      <td>
+        <strong>${d.titulo}</strong>
+        ${d.desc ? `<br><small style="color:var(--gray-500)">${d.desc.substring(0,60)}${d.desc.length>60?'…':''}</small>` : ''}
+        ${d.proceso ? `<br><span class="badge badge-blue" style="margin-top:2px">${d.proceso}</span>` : ''}
+      </td>
+      <td><span class="badge badge-gray">${d.tipo}</span></td>
+      <td><span class="badge badge-navy">v${d.version}</span></td>
+      <td>${fDate(d.fecha)}</td>
+      <td>${alertVenc}${fDate(d.proxima)}</td>
+      <td>${d.elabora||'—'}</td>
+      <td>${d.revisa||'—'}</td>
+      <td>${d.aprueba||'—'}</td>
+      <td>${statusBadge(d.estado)}</td>
+      <td>${driveBtn}</td>
+      <td style="display:flex;gap:0.3rem">
+        <button class="btn btn-outline btn-sm btn-icon" onclick="editDoc(${i})" title="Editar">✏️</button>
+        <button class="btn btn-danger btn-sm btn-icon" onclick="delItem('documentos',${i},renderDocs)" title="Eliminar">🗑</button>
+      </td>
+    </tr>`;
+  }).join('');
+  updateBadge('badge-docs', DB.documentos.length);
+  renderDocsSummary();
+}
+
+function renderDocsSummary() {
+  const container = document.getElementById('docs-summary-cards');
+  if (!container) return;
+  const tipos = ['Procedimiento','Instructivo','Manual','Formato / Registro','Política','Plan','Protocolo','Otro'];
+  const iconMap = {'Procedimiento':'⚙️','Instructivo':'📋','Manual':'📚','Formato / Registro':'📑','Política':'📜','Plan':'🗂','Protocolo':'🔬','Otro':'📁'};
+  container.innerHTML = tipos.map(t => {
+    const count = DB.documentos.filter(d => d.tipo === t).length;
+    const vigentes = DB.documentos.filter(d => d.tipo === t && d.estado === 'Vigente').length;
+    return `<div class="card" style="padding:1rem">
+      <div style="font-size:1.5rem;margin-bottom:0.4rem">${iconMap[t]}</div>
+      <div style="font-size:0.78rem;font-weight:700;color:var(--navy)">${t}</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--navy);line-height:1.1">${count}</div>
+      <div style="font-size:0.7rem;color:var(--gray-500)">${vigentes} vigente${vigentes!==1?'s':''}</div>
+    </div>`;
+  }).join('');
+}
+
+function filterDocsByTipo(tipo) {
+  const rows = document.querySelectorAll('#tbody-docs tr:not(.empty-row)');
+  rows.forEach(r => {
+    if (!tipo) { r.style.display = ''; return; }
+    r.style.display = r.textContent.includes(tipo) ? '' : 'none';
+  });
+}
+
+function testDriveLink() {
+  const url = document.getElementById('d-drive').value.trim();
+  if (!url) { alert('Ingrese un enlace primero'); return; }
+  window.open(url, '_blank');
+}
+
+function editDoc(i) {
+  const d = DB.documentos[i];
+  document.getElementById('d-codigo').value = d.codigo||'';
+  document.getElementById('d-titulo').value = d.titulo||'';
+  document.getElementById('d-tipo').value = d.tipo||'Procedimiento';
+  document.getElementById('d-version').value = d.version||'';
+  document.getElementById('d-fecha').value = d.fecha||'';
+  document.getElementById('d-proxima').value = d.proxima||'';
+  document.getElementById('d-elabora').value = d.elabora||'';
+  document.getElementById('d-revisa').value = d.revisa||'';
+  document.getElementById('d-aprueba').value = d.aprueba||'';
+  document.getElementById('d-estado').value = d.estado||'Vigente';
+  document.getElementById('d-desc').value = d.desc||'';
+  document.getElementById('d-drive').value = d.drive||'';
+  document.getElementById('d-proceso').value = d.proceso||'';
+  document.getElementById('d-ubicacion').value = d.ubicacion||'';
+  document.getElementById('d-keywords').value = d.keywords||'';
+  // Remove old, re-save on submit
+  DB.documentos.splice(i, 1);
+  openModal('modal-doc');
+}
+
+function exportListadoMaestro() {
+  if (!DB.documentos.length) { alert('No hay documentos para exportar'); return; }
+  const emp = DB.empresa.nombre || 'Organización';
+  const fecha = new Date().toLocaleDateString('es-CO');
+  let html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+  <title>Listado Maestro — ${emp}</title>
   <style>
     body{font-family:Arial,sans-serif;font-size:11px;margin:20px}
     h1{font-size:16px;color:#0a1628;margin-bottom:4px}
@@ -14,28 +1480,589 @@
     .obsoleto{background:#f8d7da;color:#721c24}
     .footer{margin-top:20px;font-size:9px;color:#999;border-top:1px solid #ddd;padding-top:8px}
   </style></head><body>
-  <h1>LISTADO MAESTRO DE DOCUMENTOS Y REGISTROS — SEA SAS ESP BIC</h1>
-  <h2>ISO 9001:2015 — Cláusula 7.5 | Generado: 22/3/2026 | Total: 2 documento(s)</h2>
+  <h1>LISTADO MAESTRO DE DOCUMENTOS Y REGISTROS — ${emp.toUpperCase()}</h1>
+  <h2>ISO 9001:2015 — Cláusula 7.5 | Generado: ${fecha} | Total: ${DB.documentos.length} documento(s)</h2>
   <table><thead><tr>
     <th>#</th><th>Código</th><th>Título</th><th>Tipo</th><th>Versión</th>
     <th>Fecha emisión</th><th>Próx. revisión</th><th>Elaboró</th><th>Revisó</th>
     <th>Aprobó</th><th>Proceso</th><th>Estado</th><th>Enlace</th>
-  </tr></thead><tbody><tr>
-      <td>1</td><td><strong>PO-SGBC001</strong></td><td>POLÍTICA DEL SGBC</td>
-      <td>Política</td><td>vv3.0</td>
-      <td>18 de mar de 2026</td><td>28 de feb de 2027</td>
-      <td>Laura Atehortúa / Coord. Ambiental</td><td>Sonia Castrillon / Subgerente</td><td>Gabriel Olaya / Gerente</td>
-      <td>Sistema de Gestión Basura Cero</td>
-      <td><span class="badge vigente">Vigente</span></td>
-      <td>—</td>
-    </tr><tr>
-      <td>2</td><td><strong>MAN-SGBC001</strong></td><td>MANUAL SISTEMA DE GESTIÓN BASURA CERO</td>
-      <td>Manual</td><td>vv3.0</td>
-      <td>16 de mar de 2026</td><td>09 de mar de 2027</td>
-      <td>Laura Atehortua / Coord. Ambiental</td><td>Sonia Castrillon / Subgerente</td><td>Sonia Castrillon / Subgerente</td>
-      <td>Sistema de Gestión Basura Cero</td>
-      <td><span class="badge vigente">Vigente</span></td>
-      <td><a href="https://docs.google.com/document/d/1UFruh4SL__lOzKtbl2psRYL0Gvlte7LO/edit" target="_blank">Ver archivo</a></td>
-    </tr></tbody></table>
-  <div class="footer">Documento generado por SGC ISO 9001 — SEA SAS ESP BIC — 22/3/2026</div>
-  </body></html>
+  </tr></thead><tbody>`;
+  DB.documentos.forEach((d,i) => {
+    const cls = d.estado==='Vigente'?'vigente':d.estado==='En revisión'?'revision':'obsoleto';
+    const link = d.drive ? `<a href="${d.drive}" target="_blank">Ver archivo</a>` : '—';
+    html += `<tr>
+      <td>${i+1}</td><td><strong>${d.codigo}</strong></td><td>${d.titulo}</td>
+      <td>${d.tipo}</td><td>v${d.version}</td>
+      <td>${fDate(d.fecha)}</td><td>${fDate(d.proxima)}</td>
+      <td>${d.elabora||'—'}</td><td>${d.revisa||'—'}</td><td>${d.aprueba||'—'}</td>
+      <td>${d.proceso||'—'}</td>
+      <td><span class="badge ${cls}">${d.estado}</span></td>
+      <td>${link}</td>
+    </tr>`;
+  });
+  html += `</tbody></table>
+  <div class="footer">Documento generado por SGC ISO 9001 — ${emp} — ${fecha}</div>
+  </body></html>`;
+  const blob = new Blob([html], {type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Listado_Maestro_Documentos_${new Date().toISOString().slice(0,10)}.html`;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+// ══════════════════ PROCESOS ══════════════════
+function saveProc() {
+  const p = {
+    id: uid(), codigo: v('p-codigo'), nombre: v('p-nombre'), tipo: v('p-tipo'),
+    resp: v('p-resp'), obj: v('p-obj'), entradas: v('p-entradas'), salidas: v('p-salidas'),
+    indicador: v('p-indicador'), recursos: v('p-recursos'), docs: v('p-docs')
+  };
+  if (!p.nombre) { alert('Complete el nombre del proceso'); return; }
+  DB.procesos.push(p); save(); renderProc(); closeModal('modal-proc'); clearModal('p-');
+}
+function renderProc() {
+  const tb = document.getElementById('tbody-proc');
+  if (!DB.procesos.length) { tb.innerHTML = emptyRow(8); updateBadge('badge-proc',0); return; }
+  const tipos = {'Estratégico':'badge-navy','Misional / Core':'badge-green','Soporte / Apoyo':'badge-blue'};
+  tb.innerHTML = DB.procesos.map((p,i) => `
+    <tr>
+      <td><span class="badge badge-navy">${p.codigo}</span></td>
+      <td><strong>${p.nombre}</strong></td>
+      <td><span class="badge ${tipos[p.tipo]||'badge-gray'}">${p.tipo}</span></td>
+      <td style="max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.obj}</td>
+      <td>${p.resp}</td>
+      <td>${p.indicador}</td>
+      <td style="max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.recursos}</td>
+      <td><button class="btn btn-danger btn-sm btn-icon" onclick="delItem('procesos',${i},renderProc)">🗑</button></td>
+    </tr>`).join('');
+  updateBadge('badge-proc', DB.procesos.length);
+}
+
+// ══════════════════ RIESGOS ══════════════════
+let riskCount = 0;
+function saveRisk() {
+  const r = {
+    id: 'R-' + String(++riskCount).padStart(3,'0'),
+    tipo: v('r-tipo'), proceso: v('r-proceso'), desc: v('r-desc'),
+    prob: parseInt(v('r-prob')), impacto: parseInt(v('r-impacto')),
+    accion: v('r-accion'), resp: v('r-resp'), fecha: v('r-fecha'), estado: v('r-estado')
+  };
+  if (!r.desc) { alert('Complete la descripción'); return; }
+  DB.riesgos.push(r); save(); renderRisk(); closeModal('modal-risk'); clearModal('r-');
+}
+function renderRisk() {
+  const tb = document.getElementById('tbody-risk');
+  if (!DB.riesgos.length) { tb.innerHTML = emptyRow(11); updateBadge('badge-risk',0,'warn'); return; }
+  tb.innerHTML = DB.riesgos.map((r,i) => `
+    <tr>
+      <td><span class="badge ${r.tipo==='Riesgo'?'badge-red':'badge-green'}">${r.id}</span></td>
+      <td style="max-width:150px">${r.desc}</td>
+      <td>${r.tipo}</td>
+      <td>${r.proceso}</td>
+      <td>${r.prob}</td><td>${r.impacto}</td>
+      <td>${riskLevel(r.prob,r.impacto)}</td>
+      <td style="max-width:130px">${r.accion}</td>
+      <td>${r.resp}</td>
+      <td>${statusBadge(r.estado)}</td>
+      <td><button class="btn btn-danger btn-sm btn-icon" onclick="delItem('riesgos',${i},renderRisk)">🗑</button></td>
+    </tr>`).join('');
+  updateBadge('badge-risk', DB.riesgos.length, 'warn');
+}
+
+// ══════════════════ KPI ══════════════════
+function saveKpi() {
+  const k = {
+    id: uid(), codigo: v('k-codigo'), nombre: v('k-nombre'), proceso: v('k-proceso'),
+    freq: v('k-freq'), formula: v('k-formula'), meta: v('k-meta'),
+    resultado: v('k-resultado'), resp: v('k-resp'), fuente: v('k-fuente'), obs: v('k-obs')
+  };
+  if (!k.nombre) { alert('Complete el nombre del KPI'); return; }
+  DB.kpis.push(k); save(); renderKpi(); closeModal('modal-kpi'); clearModal('k-');
+}
+function renderKpi() {
+  const tb = document.getElementById('tbody-kpi');
+  if (!DB.kpis.length) { tb.innerHTML = emptyRow(10); updateBadge('badge-kpi',0); return; }
+  tb.innerHTML = DB.kpis.map((k,i) => {
+    const res = parseFloat(k.resultado);
+    const meta = parseFloat(k.meta);
+    const pct = (!isNaN(res) && !isNaN(meta) && meta>0) ? Math.round(res/meta*100) : null;
+    const badge = pct===null ? '<span class="badge badge-gray">—</span>'
+      : pct>=100 ? '<span class="badge badge-green">✅ '+pct+'%</span>'
+      : pct>=75 ? '<span class="badge badge-orange">⚠️ '+pct+'%</span>'
+      : '<span class="badge badge-red">❌ '+pct+'%</span>';
+    return `<tr>
+      <td><span class="badge badge-navy">${k.codigo}</span></td>
+      <td><strong>${k.nombre}</strong></td>
+      <td>${k.proceso}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:0.72rem">${k.formula}</td>
+      <td>${k.freq}</td><td>${k.meta}</td><td>${k.resultado}</td>
+      <td>${badge}</td><td>${k.resp}</td>
+      <td><button class="btn btn-danger btn-sm btn-icon" onclick="delItem('kpis',${i},renderKpi)">🗑</button></td>
+    </tr>`;
+  }).join('');
+  updateBadge('badge-kpi', DB.kpis.length);
+}
+
+// ══════════════════ NC ══════════════════
+let ncCount = 0;
+function saveNc() {
+  const nc = {
+    id: 'NC-' + String(++ncCount).padStart(3,'0'),
+    fecha: v('nc-fecha'), origen: v('nc-origen'), desc: v('nc-desc'),
+    proceso: v('nc-proceso'), requisito: v('nc-requisito'),
+    causa: v('nc-causa'), accion: v('nc-accion'),
+    resp: v('nc-resp'), fechacierre: v('nc-fechacierre'), estado: v('nc-estado')
+  };
+  if (!nc.desc) { alert('Complete la descripción'); return; }
+  DB.noConformidades.push(nc); save(); renderNc(); closeModal('modal-nc'); clearModal('nc-');
+}
+function renderNc() {
+  const tb = document.getElementById('tbody-nc');
+  if (!DB.noConformidades.length) { tb.innerHTML = emptyRow(11); updateBadge('badge-nc',0,'warn'); return; }
+  tb.innerHTML = DB.noConformidades.map((nc,i) => `
+    <tr>
+      <td><span class="badge badge-red">${nc.id}</span></td>
+      <td style="max-width:160px">${nc.desc}</td>
+      <td>${nc.origen}</td><td>${nc.proceso}</td>
+      <td>${fDate(nc.fecha)}</td><td>${nc.resp}</td>
+      <td style="max-width:120px">${nc.causa}</td>
+      <td style="max-width:120px">${nc.accion}</td>
+      <td>${fDate(nc.fechacierre)}</td>
+      <td>${statusBadge(nc.estado)}</td>
+      <td><button class="btn btn-danger btn-sm btn-icon" onclick="delItem('noConformidades',${i},renderNc)">🗑</button></td>
+    </tr>`).join('');
+  const abiertas = DB.noConformidades.filter(n => n.estado === 'Abierta' || n.estado === 'En proceso').length;
+  updateBadge('badge-nc', abiertas, 'warn');
+}
+
+// ══════════════════ ACCIONES ══════════════════
+let accCount = 0;
+function saveAcc() {
+  const a = {
+    id: 'AM-' + String(++accCount).padStart(3,'0'),
+    desc: v('a-desc'), origen: v('a-origen'), proceso: v('a-proceso'),
+    resp: v('a-resp'), inicio: v('a-inicio'), limite: v('a-limite'),
+    avance: v('a-avance'), estado: v('a-estado')
+  };
+  if (!a.desc) { alert('Complete la descripción'); return; }
+  DB.acciones.push(a); save(); renderAcc(); closeModal('modal-acc'); clearModal('a-');
+}
+function renderAcc() {
+  const tb = document.getElementById('tbody-acc');
+  if (!DB.acciones.length) { tb.innerHTML = emptyRow(10); updateBadge('badge-acc',0); return; }
+  tb.innerHTML = DB.acciones.map((a,i) => {
+    const pct = parseInt(a.avance) || 0;
+    return `<tr>
+      <td><span class="badge badge-navy">${a.id}</span></td>
+      <td style="max-width:160px">${a.desc}</td>
+      <td>${a.origen}</td><td>${a.proceso}</td><td>${a.resp}</td>
+      <td>${fDate(a.inicio)}</td><td>${fDate(a.limite)}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:0.5rem">
+          <div class="progress-bar" style="width:80px"><div class="progress-fill" style="width:${pct}%"></div></div>
+          <span style="font-size:0.75rem">${pct}%</span>
+        </div>
+      </td>
+      <td>${statusBadge(a.estado)}</td>
+      <td><button class="btn btn-danger btn-sm btn-icon" onclick="delItem('acciones',${i},renderAcc)">🗑</button></td>
+    </tr>`;
+  }).join('');
+  updateBadge('badge-acc', DB.acciones.length);
+}
+
+// ══════════════════ OBJETIVOS ══════════════════
+function saveObj() {
+  const o = {
+    id: uid(), codigo: v('o-codigo'), proceso: v('o-proceso'), desc: v('o-desc'),
+    indicador: v('o-indicador'), meta: v('o-meta'), resp: v('o-resp'),
+    plazo: v('o-plazo'), recursos: v('o-recursos'), estado: v('o-estado')
+  };
+  if (!o.desc) { alert('Complete el objetivo'); return; }
+  DB.objetivos.push(o); save(); renderObj(); closeModal('modal-obj'); clearModal('o-');
+}
+function renderObj() {
+  const tb = document.getElementById('tbody-obj');
+  if (!DB.objetivos.length) { tb.innerHTML = emptyRow(8); return; }
+  tb.innerHTML = DB.objetivos.map((o,i) => `
+    <tr>
+      <td><span class="badge badge-navy">${o.codigo}</span></td>
+      <td>${o.desc}</td><td>${o.indicador}</td><td>${o.meta}</td>
+      <td>${o.resp}</td><td>${fDate(o.plazo)}</td>
+      <td>${statusBadge(o.estado)}</td>
+      <td><button class="btn btn-danger btn-sm btn-icon" onclick="delItem('objetivos',${i},renderObj)">🗑</button></td>
+    </tr>`).join('');
+}
+
+// ══════════════════ PARTES ══════════════════
+function saveParte() {
+  const p = {
+    id: uid(), nombre: v('pi-nombre'), tipo: v('pi-tipo'),
+    necesidades: v('pi-necesidades'), requisitos: v('pi-requisitos'), seguimiento: v('pi-seguimiento')
+  };
+  if (!p.nombre) { alert('Complete el nombre'); return; }
+  DB.partes.push(p); save(); renderPartes(); closeModal('modal-parte'); clearModal('pi-');
+}
+function renderPartes() {
+  const tb = document.getElementById('tbody-partes');
+  if (!DB.partes.length) { tb.innerHTML = emptyRow(6); return; }
+  tb.innerHTML = DB.partes.map((p,i) => `
+    <tr>
+      <td><strong>${p.nombre}</strong></td>
+      <td><span class="badge ${p.tipo==='Interna'?'badge-navy':'badge-blue'}">${p.tipo}</span></td>
+      <td>${p.necesidades}</td><td>${p.requisitos}</td><td>${p.seguimiento}</td>
+      <td><button class="btn btn-danger btn-sm btn-icon" onclick="delItem('partes',${i},renderPartes)">🗑</button></td>
+    </tr>`).join('');
+}
+
+// ══════════════════ COMPETENCIAS ══════════════════
+function saveComp() {
+  const c = {
+    id: uid(), nombre: v('c-nombre'), cargo: v('c-cargo'), edu: v('c-edu'),
+    form: v('c-form'), exp: v('c-exp'), hab: v('c-hab'), estado: v('c-estado')
+  };
+  if (!c.nombre) { alert('Complete el nombre'); return; }
+  DB.competencias.push(c); save(); renderComp(); closeModal('modal-comp'); clearModal('c-');
+}
+function renderComp() {
+  const tb = document.getElementById('tbody-comp');
+  if (!DB.competencias.length) { tb.innerHTML = emptyRow(8); return; }
+  tb.innerHTML = DB.competencias.map((c,i) => `
+    <tr>
+      <td><strong>${c.nombre}</strong></td><td>${c.cargo}</td>
+      <td>${c.edu}</td><td>${c.form}</td><td>${c.exp}</td><td>${c.hab}</td>
+      <td>${statusBadge(c.estado)}</td>
+      <td><button class="btn btn-danger btn-sm btn-icon" onclick="delItem('competencias',${i},renderComp)">🗑</button></td>
+    </tr>`).join('');
+}
+
+// ══════════════════ PROVEEDORES ══════════════════
+function saveProv() {
+  const p = {
+    id: uid(), nombre: v('pv-nombre'), producto: v('pv-producto'),
+    criterio: v('pv-criterio'), fecha: v('pv-fecha'),
+    calif: parseInt(v('pv-calif')) || 0, estado: v('pv-estado')
+  };
+  if (!p.nombre) { alert('Complete el nombre del proveedor'); return; }
+  DB.proveedores.push(p); save(); renderProv(); closeModal('modal-prov'); clearModal('pv-');
+}
+function renderProv() {
+  const tb = document.getElementById('tbody-prov');
+  if (!DB.proveedores.length) { tb.innerHTML = emptyRow(7); updateBadge('badge-prov',0); return; }
+  tb.innerHTML = DB.proveedores.map((p,i) => {
+    const cl = p.calif >= 80 ? 'badge-green' : p.calif >= 60 ? 'badge-orange' : 'badge-red';
+    return `<tr>
+      <td><strong>${p.nombre}</strong></td><td>${p.producto}</td>
+      <td style="max-width:150px">${p.criterio}</td><td>${fDate(p.fecha)}</td>
+      <td><span class="badge ${cl}">${p.calif}/100</span></td>
+      <td>${statusBadge(p.estado)}</td>
+      <td><button class="btn btn-danger btn-sm btn-icon" onclick="delItem('proveedores',${i},renderProv)">🗑</button></td>
+    </tr>`;
+  }).join('');
+  updateBadge('badge-prov', DB.proveedores.length);
+}
+
+// ══════════════════ AUDITORÍA ══════════════════
+const AUDIT_ITEMS = [
+  { clause:'4.1', title:'Contexto de la organización', items:[
+    'Se ha determinado el contexto interno y externo de la organización',
+    'Se identifican los factores que pueden afectar el SGC',
+    'Esta información se revisa y actualiza periódicamente'
+  ]},
+  { clause:'4.2', title:'Partes interesadas', items:[
+    'Se han identificado las partes interesadas relevantes',
+    'Se conocen sus necesidades y expectativas',
+    'Se hace seguimiento a los requisitos de partes interesadas'
+  ]},
+  { clause:'4.3', title:'Alcance del SGC', items:[
+    'El alcance del SGC está documentado y disponible',
+    'Las exclusiones están justificadas',
+    'El alcance incluye productos/servicios y ubicaciones aplicables'
+  ]},
+  { clause:'5.2', title:'Política de calidad', items:[
+    'La política de calidad está documentada y aprobada',
+    'Es apropiada al contexto y propósito de la organización',
+    'Está comunicada y entendida por el personal',
+    'Se revisa periódicamente para asegurar su pertinencia'
+  ]},
+  { clause:'6.1', title:'Riesgos y oportunidades', items:[
+    'Se han identificado riesgos y oportunidades del SGC',
+    'Existen acciones para abordar riesgos y oportunidades',
+    'Se evalúa la eficacia de las acciones tomadas',
+    'La matriz de riesgos está actualizada'
+  ]},
+  { clause:'6.2', title:'Objetivos de calidad', items:[
+    'Los objetivos de calidad están documentados',
+    'Son medibles y coherentes con la política de calidad',
+    'Se hace seguimiento al cumplimiento de objetivos',
+    'Existen planes para lograr los objetivos'
+  ]},
+  { clause:'7.1', title:'Recursos', items:[
+    'Se han determinado y proporcionado los recursos necesarios',
+    'La infraestructura es adecuada para los procesos',
+    'El ambiente de trabajo es apropiado'
+  ]},
+  { clause:'7.2', title:'Competencia', items:[
+    'Se ha determinado la competencia necesaria del personal',
+    'El personal posee la educación, formación y experiencia requerida',
+    'Existe evidencia documentada de la competencia (hojas de vida, diplomas)'
+  ]},
+  { clause:'7.5', title:'Información documentada', items:[
+    'Existe un listado maestro de documentos y registros',
+    'Los documentos están controlados (versión, fecha, aprobación)',
+    'Los registros están disponibles y protegidos',
+    'Existe un procedimiento de control de documentos'
+  ]},
+  { clause:'8.1', title:'Planificación y control operacional', items:[
+    'Los procesos operacionales están planificados y controlados',
+    'Se han determinado los criterios de aceptación',
+    'La información documentada de procesos está disponible'
+  ]},
+  { clause:'8.4', title:'Control de proveedores externos', items:[
+    'Los proveedores externos están identificados y evaluados',
+    'Existe una lista de proveedores aprobados',
+    'Se comunican los requisitos a los proveedores',
+    'Se hace seguimiento al desempeño de proveedores'
+  ]},
+  { clause:'9.1', title:'Seguimiento, medición y análisis', items:[
+    'Se mide la satisfacción del cliente',
+    'Los indicadores KPI están definidos y se miden regularmente',
+    'Se analiza y evalúa el desempeño del SGC',
+    'Existen registros de los resultados de medición'
+  ]},
+  { clause:'9.2', title:'Auditoría interna', items:[
+    'Existe un programa de auditorías internas',
+    'Las auditorías se realizan con la frecuencia planificada',
+    'Los auditores son competentes e imparciales',
+    'Los resultados de auditoría se reportan a la dirección'
+  ]},
+  { clause:'10.2', title:'No conformidades y acciones correctivas', items:[
+    'Existe un procedimiento para gestionar no conformidades',
+    'Se identifican causas raíz de las no conformidades',
+    'Se implementan acciones correctivas eficaces',
+    'Se hace seguimiento a la eficacia de las acciones'
+  ]},
+  { clause:'10.3', title:'Mejora continua', items:[
+    'Se identifican oportunidades de mejora continuamente',
+    'Existe un plan de mejora con acciones definidas',
+    'Se evalúan los resultados de las mejoras implementadas'
+  ]}
+];
+
+function renderAudit() {
+  const container = document.getElementById('audit-sections');
+  container.innerHTML = AUDIT_ITEMS.map(s => {
+    const itemsHtml = s.items.map((item, idx) => {
+      const key = s.clause + '_' + idx;
+      const checked = DB.auditChecks[key];
+      return `<div class="audit-item">
+        <div class="audit-check ${checked?'checked':''}" onclick="toggleAudit('${key}',this)">${checked?'✓':''}</div>
+        <div>
+          <div class="audit-item-text">${item}</div>
+          <div class="audit-item-ref">Cláusula ${s.clause}</div>
+        </div>
+      </div>`;
+    }).join('');
+    const total = s.items.length;
+    const done = s.items.filter((_,i) => DB.auditChecks[s.clause+'_'+i]).length;
+    const pct = Math.round(done/total*100);
+    return `<div class="audit-section">
+      <div class="audit-section-header" onclick="toggleAuditSection(this)">
+        <span class="audit-clause-num">${s.clause}</span>
+        <span class="audit-section-title">${s.title}</span>
+        <span class="badge ${done===total?'badge-green':done>0?'badge-orange':'badge-gray'}">${done}/${total}</span>
+        <span style="margin-left:0.5rem;opacity:0.5">▼</span>
+      </div>
+      <div class="audit-section-body open">${itemsHtml}</div>
+    </div>`;
+  }).join('');
+  updateAuditProgress();
+}
+
+function toggleAuditSection(header) {
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+function toggleAudit(key, el) {
+  DB.auditChecks[key] = !DB.auditChecks[key];
+  el.classList.toggle('checked');
+  el.textContent = DB.auditChecks[key] ? '✓' : '';
+  save(); updateAuditProgress();
+  // update section badge
+  renderAuditBadges();
+}
+function renderAuditBadges() {
+  AUDIT_ITEMS.forEach(s => {
+    const total = s.items.length;
+    const done = s.items.filter((_,i) => DB.auditChecks[s.clause+'_'+i]).length;
+    // find header badge
+    const headers = document.querySelectorAll('.audit-section-header');
+    headers.forEach(h => {
+      const clauseEl = h.querySelector('.audit-clause-num');
+      if (clauseEl && clauseEl.textContent === s.clause) {
+        const badge = h.querySelectorAll('.badge')[0];
+        if (badge) {
+          badge.textContent = `${done}/${total}`;
+          badge.className = `badge ${done===total?'badge-green':done>0?'badge-orange':'badge-gray'}`;
+        }
+      }
+    });
+  });
+}
+function updateAuditProgress() {
+  const total = AUDIT_ITEMS.reduce((a,s) => a + s.items.length, 0);
+  const done = Object.values(DB.auditChecks).filter(Boolean).length;
+  const pct = total > 0 ? Math.round(done/total*100) : 0;
+  document.getElementById('audit-progress-pct').textContent = pct + '%';
+  document.getElementById('audit-progress-bar').style.width = pct + '%';
+}
+function resetAudit() {
+  if (!confirm('¿Resetear todas las verificaciones de auditoría?')) return;
+  DB.auditChecks = {}; save(); renderAudit();
+}
+
+// ══════════════════ DASHBOARD ══════════════════
+function renderDashboard() {
+  document.getElementById('ds-docs').textContent = DB.documentos.length;
+  document.getElementById('ds-proc').textContent = DB.procesos.length;
+  const ncAbiertas = DB.noConformidades.filter(n => n.estado==='Abierta'||n.estado==='En proceso').length;
+  document.getElementById('ds-nc').textContent = ncAbiertas;
+  document.getElementById('ds-kpi').textContent = DB.kpis.length;
+  if (DB.empresa.nombre) document.getElementById('dash-empresa-sub').textContent =
+    `Sistema de Gestión de Calidad — ${DB.empresa.nombre}`;
+
+  const total = AUDIT_ITEMS.reduce((a,s)=>a+s.items.length,0);
+  const done = Object.values(DB.auditChecks).filter(Boolean).length;
+  const auditPct = total>0?Math.round(done/total*100):0;
+
+  const clauses = [
+    { num:'4', name:'Contexto', icon:'🏢', done: DB.empresa.alcance ? 1 : 0, total:5 },
+    { num:'5', name:'Liderazgo', icon:'👤', done: DB.politica.texto ? 1 : 0, total:3 },
+    { num:'6', name:'Planificación', icon:'🎯', done: DB.riesgos.length + DB.objetivos.length, total:10 },
+    { num:'7', name:'Soporte', icon:'🛠', done: DB.documentos.length + DB.competencias.length, total:15 },
+    { num:'8', name:'Operación', icon:'⚙️', done: DB.procesos.length + DB.proveedores.length, total:10 },
+    { num:'9', name:'Evaluación', icon:'📊', done: DB.kpis.length, total:5 },
+    { num:'10', name:'Mejora', icon:'📈', done: DB.acciones.length, total:5 },
+  ];
+  document.getElementById('dash-clauses').innerHTML = clauses.map(c => {
+    const pct = c.total>0 ? Math.min(100,Math.round(c.done/c.total*100)) : 0;
+    const color = pct>=80?'#1a7a4a':pct>=40?'#e67e22':'#c0392b';
+    return `<div class="card">
+      <div class="card-header">
+        <div class="card-icon navy" style="font-size:1.3rem">${c.icon}</div>
+        <div>
+          <div class="card-title">Cláusula ${c.num} — ${c.name}</div>
+          <div class="card-subtitle">${c.done} registros</div>
+        </div>
+      </div>
+      <div class="progress-bar" style="margin-bottom:0.5rem">
+        <div class="progress-fill" style="width:${pct}%;background:${color}"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--gray-500)">
+        <span>Completado</span><strong style="color:${color}">${pct}%</strong>
+      </div>
+    </div>`;
+  }).join('') + `<div class="card">
+    <div class="card-header">
+      <div class="card-icon gold">🔍</div>
+      <div><div class="card-title">Preparación Auditoría</div><div class="card-subtitle">Lista de verificación</div></div>
+    </div>
+    <div class="progress-bar" style="margin-bottom:0.5rem">
+      <div class="progress-fill" style="width:${auditPct}%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--gray-500)">
+      <span>${done}/${total} ítems verificados</span><strong style="color:var(--gold)">${auditPct}%</strong>
+    </div>
+  </div>`;
+}
+
+// ══════════════════ UTILS ══════════════════
+function updateHeader() {
+  document.getElementById('company-name-display').textContent =
+    DB.empresa.nombre || 'Configure la empresa →';
+}
+function updateBadge(id, n, type='') {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = n;
+  el.className = 'nav-badge' + (type ? ' ' + type : '');
+}
+function fDate(d) {
+  if (!d) return '—';
+  try { const dt = new Date(d); return dt.toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'}); }
+  catch(e){ return d; }
+}
+function delItem(arr, idx, fn) {
+  if (!confirm('¿Eliminar este registro?')) return;
+  DB[arr].splice(idx, 1); save(); fn();
+}
+function clearModal(prefix) {
+  document.querySelectorAll(`[id^="${prefix}"]`).forEach(el => {
+    if (el.tagName === 'SELECT') el.selectedIndex = 0;
+    else el.value = '';
+  });
+}
+function filterTable(tbodyId, q) {
+  const rows = document.getElementById(tbodyId).querySelectorAll('tr:not(.empty-row)');
+  q = q.toLowerCase();
+  rows.forEach(r => { r.style.display = r.textContent.toLowerCase().includes(q) ? '' : 'none'; });
+}
+
+// ══════════════════ EXPORT / IMPORT ══════════════════
+function exportData() {
+  const blob = new Blob([JSON.stringify(DB, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'SGC_ISO9001_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click(); URL.revokeObjectURL(url);
+}
+function importData() { document.getElementById('import-file').click(); }
+function handleImport(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      DB = JSON.parse(ev.target.result);
+      save(); initApp();
+      alert('✅ Datos importados correctamente');
+    } catch(err) { alert('❌ Error al importar el archivo'); }
+  };
+  reader.readAsText(file);
+}
+
+// ══════════════════ INIT ══════════════════
+function initApp() {
+  updateHeader();
+  loadEmpresa();
+  loadPolitica();
+  renderDocs();
+  renderProc();
+  renderRisk();
+  renderKpi();
+  renderNc();
+  renderAcc();
+  renderObj();
+  renderPartes();
+  renderComp();
+  renderProv();
+  renderDashboard();
+  // Sync counters
+  riskCount = DB.riesgos.length;
+  ncCount = DB.noConformidades.length;
+  accCount = DB.acciones.length;
+}
+
+// Date display
+(function() {
+  const d = new Date();
+  document.getElementById('current-date-display').textContent =
+    d.toLocaleDateString('es-CO',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+})();
+
+load();
+initApp();
+</script>
+</body>
+</html>
+
