@@ -417,6 +417,10 @@
     .card, .table-wrap, .audit-section { break-inside: avoid; }
   }
 
+  .table-wrap { overflow-x: auto; }
+  #table-docs th, #table-docs td { white-space: nowrap; }
+  #table-docs td:nth-child(3) { white-space: normal; min-width: 180px; max-width: 260px; }
+
   /* ── SCROLLBAR ── */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
@@ -670,25 +674,52 @@
     <div id="page-documentos" class="page">
       <div class="page-header">
         <div><h1>Control de Información Documentada</h1>
-          <p>Registro maestro de documentos y registros — Cláusula 7.5</p></div>
+          <p>Listado Maestro de Documentos y Registros — Cláusula 7.5</p></div>
         <div class="clause-tag">§ 7.5</div>
       </div>
+
+      <!-- Guía Google Drive -->
+      <div class="alert alert-info" id="drive-guide">
+        <div>
+          <strong>📁 ¿Cómo vincular documentos de Google Drive?</strong><br>
+          <span style="font-size:0.8rem">
+            1. Abra el archivo en Google Drive → clic derecho → <strong>"Obtener enlace"</strong><br>
+            2. Cambie el acceso a <strong>"Cualquier persona con el enlace"</strong> (o solo su organización)<br>
+            3. Copie el enlace y péguelo en el campo <strong>"Enlace Google Drive"</strong> al registrar el documento<br>
+            4. El botón 📎 aparecerá en el listado para abrir el archivo directamente.
+          </span>
+          <button class="btn btn-sm btn-outline" style="margin-top:0.5rem" onclick="this.closest('.alert').style.display='none'">Entendido ✓</button>
+        </div>
+      </div>
+
       <div class="table-wrap">
         <div class="table-toolbar">
           <h3>Listado Maestro de Documentos</h3>
           <input class="input-search" type="text" placeholder="🔍 Buscar..." oninput="filterTable('tbody-docs',this.value)">
+          <select id="filter-tipo-doc" onchange="filterDocsByTipo(this.value)" style="padding:0.45rem 0.7rem;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:0.82rem;color:var(--navy)">
+            <option value="">Todos los tipos</option>
+            <option>Procedimiento</option><option>Instructivo</option><option>Manual</option>
+            <option>Formato / Registro</option><option>Política</option><option>Plan</option>
+            <option>Protocolo</option><option>Otro</option>
+          </select>
+          <button class="btn btn-outline btn-sm" onclick="exportListadoMaestro()">📄 Exportar listado</button>
           <button class="btn btn-primary btn-sm" onclick="openModal('modal-doc')">➕ Nuevo documento</button>
         </div>
-        <table>
+        <table id="table-docs">
           <thead><tr>
-            <th>Código</th><th>Título</th><th>Tipo</th><th>Versión</th>
-            <th>Fecha emisión</th><th>Responsable</th><th>Estado</th><th>Acciones</th>
+            <th>#</th><th>Código</th><th>Título del documento</th><th>Tipo</th><th>Versión</th>
+            <th>Fecha emisión</th><th>Próx. revisión</th><th>Elaboró</th><th>Revisó</th>
+            <th>Aprobó</th><th>Estado</th><th>Archivo</th><th>Acciones</th>
           </tr></thead>
           <tbody id="tbody-docs">
-            <tr class="empty-row"><td colspan="8">No hay documentos registrados</td></tr>
+            <tr class="empty-row"><td colspan="13">No hay documentos registrados</td></tr>
           </tbody>
         </table>
       </div>
+
+      <!-- Resumen por tipo -->
+      <div class="section-title" style="margin-top:1.5rem">Resumen por tipo de documento</div>
+      <div class="cards-grid" id="docs-summary-cards" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr))"></div>
     </div>
 
     <!-- ══ PROCESOS ══ -->
@@ -922,8 +953,8 @@
     <div class="modal-title">Registrar Documento</div>
     <div class="modal-subtitle">Información documentada — Cláusula 7.5</div>
     <div class="form-grid form-grid-2">
-      <div class="form-group"><label>Código del documento</label><input id="d-codigo" placeholder="SGC-PO-001"></div>
-      <div class="form-group"><label>Título</label><input id="d-titulo" placeholder="Nombre del documento"></div>
+      <div class="form-group"><label>Código del documento *</label><input id="d-codigo" placeholder="SGC-PO-001"></div>
+      <div class="form-group"><label>Título *</label><input id="d-titulo" placeholder="Nombre del documento"></div>
       <div class="form-group"><label>Tipo</label>
         <select id="d-tipo">
           <option>Procedimiento</option><option>Instructivo</option><option>Manual</option>
@@ -942,8 +973,23 @@
           <option>Vigente</option><option>En revisión</option><option>Obsoleto</option>
         </select>
       </div>
+      <div class="form-group"><label>Proceso asociado</label><input id="d-proceso" placeholder="Proceso al que pertenece"></div>
+      <div class="form-group"><label>Ubicación física (si aplica)</label><input id="d-ubicacion" placeholder="Carpeta, archivador, etc."></div>
+      <div class="form-group" style="grid-column:span 2">
+        <label>🔗 Enlace Google Drive (PDF, Word o Excel)</label>
+        <div style="display:flex;gap:0.5rem;align-items:center">
+          <input id="d-drive" placeholder="https://drive.google.com/file/d/..." style="flex:1">
+          <button type="button" class="btn btn-outline btn-sm" onclick="testDriveLink()" title="Probar enlace">🔍 Probar</button>
+        </div>
+        <small style="color:var(--gray-500);font-size:0.72rem;margin-top:0.2rem;display:block">
+          Pegue aquí el enlace de Google Drive con acceso compartido
+        </small>
+      </div>
       <div class="form-group" style="grid-column:span 2"><label>Descripción / Alcance</label>
         <textarea id="d-desc" placeholder="Breve descripción del documento..."></textarea>
+      </div>
+      <div class="form-group" style="grid-column:span 2"><label>Palabras clave (para búsqueda)</label>
+        <input id="d-keywords" placeholder="calidad, proceso, cliente, etc.">
       </div>
     </div>
     <div class="modal-footer">
@@ -1293,26 +1339,170 @@ function saveDoc() {
     id: uid(), codigo: v('d-codigo'), titulo: v('d-titulo'), tipo: v('d-tipo'),
     version: v('d-version'), fecha: v('d-fecha'), proxima: v('d-proxima'),
     elabora: v('d-elabora'), revisa: v('d-revisa'), aprueba: v('d-aprueba'),
-    estado: v('d-estado'), desc: v('d-desc')
+    estado: v('d-estado'), desc: v('d-desc'),
+    drive: v('d-drive'), proceso: v('d-proceso'),
+    ubicacion: v('d-ubicacion'), keywords: v('d-keywords')
   };
   if (!doc.codigo || !doc.titulo) { alert('Complete código y título'); return; }
   DB.documentos.push(doc); save(); renderDocs(); closeModal('modal-doc'); clearModal('d-');
 }
+
+function getFileIcon(drive) {
+  if (!drive) return '';
+  if (drive.includes('spreadsheet') || drive.includes('.xlsx')) return '📊';
+  if (drive.includes('document') || drive.includes('.docx')) return '📝';
+  return '📄';
+}
+
+function isDocVencido(proxima) {
+  if (!proxima) return false;
+  return new Date(proxima) < new Date();
+}
+
 function renderDocs() {
   const tb = document.getElementById('tbody-docs');
-  if (!DB.documentos.length) { tb.innerHTML = emptyRow(8); updateBadge('badge-docs',0); return; }
-  tb.innerHTML = DB.documentos.map((d,i) => `
-    <tr>
+  if (!DB.documentos.length) {
+    tb.innerHTML = emptyRow(13);
+    updateBadge('badge-docs', 0);
+    renderDocsSummary();
+    return;
+  }
+  tb.innerHTML = DB.documentos.map((d, i) => {
+    const vencido = isDocVencido(d.proxima);
+    const driveBtn = d.drive
+      ? `<a href="${d.drive}" target="_blank" rel="noopener" class="btn btn-gold btn-sm" title="Abrir en Google Drive">${getFileIcon(d.drive)} Abrir</a>`
+      : `<span style="color:var(--gray-500);font-size:0.75rem">Sin enlace</span>`;
+    const alertVenc = vencido
+      ? `<span class="badge badge-red" title="Revisión vencida">⚠️ Vencido</span> ` : '';
+    return `<tr>
+      <td style="color:var(--gray-500);font-family:'DM Mono',monospace;font-size:0.7rem">${i+1}</td>
       <td><span class="badge badge-navy">${d.codigo}</span></td>
-      <td><strong>${d.titulo}</strong><br><small style="color:var(--gray-500)">${d.tipo}</small></td>
-      <td>${d.tipo}</td>
-      <td><span class="badge badge-gray">v${d.version}</span></td>
+      <td>
+        <strong>${d.titulo}</strong>
+        ${d.desc ? `<br><small style="color:var(--gray-500)">${d.desc.substring(0,60)}${d.desc.length>60?'…':''}</small>` : ''}
+        ${d.proceso ? `<br><span class="badge badge-blue" style="margin-top:2px">${d.proceso}</span>` : ''}
+      </td>
+      <td><span class="badge badge-gray">${d.tipo}</span></td>
+      <td><span class="badge badge-navy">v${d.version}</span></td>
       <td>${fDate(d.fecha)}</td>
-      <td>${d.aprueba}</td>
+      <td>${alertVenc}${fDate(d.proxima)}</td>
+      <td>${d.elabora||'—'}</td>
+      <td>${d.revisa||'—'}</td>
+      <td>${d.aprueba||'—'}</td>
       <td>${statusBadge(d.estado)}</td>
-      <td><button class="btn btn-danger btn-sm btn-icon" onclick="delItem('documentos',${i},renderDocs)">🗑</button></td>
-    </tr>`).join('');
+      <td>${driveBtn}</td>
+      <td style="display:flex;gap:0.3rem">
+        <button class="btn btn-outline btn-sm btn-icon" onclick="editDoc(${i})" title="Editar">✏️</button>
+        <button class="btn btn-danger btn-sm btn-icon" onclick="delItem('documentos',${i},renderDocs)" title="Eliminar">🗑</button>
+      </td>
+    </tr>`;
+  }).join('');
   updateBadge('badge-docs', DB.documentos.length);
+  renderDocsSummary();
+}
+
+function renderDocsSummary() {
+  const container = document.getElementById('docs-summary-cards');
+  if (!container) return;
+  const tipos = ['Procedimiento','Instructivo','Manual','Formato / Registro','Política','Plan','Protocolo','Otro'];
+  const iconMap = {'Procedimiento':'⚙️','Instructivo':'📋','Manual':'📚','Formato / Registro':'📑','Política':'📜','Plan':'🗂','Protocolo':'🔬','Otro':'📁'};
+  container.innerHTML = tipos.map(t => {
+    const count = DB.documentos.filter(d => d.tipo === t).length;
+    const vigentes = DB.documentos.filter(d => d.tipo === t && d.estado === 'Vigente').length;
+    return `<div class="card" style="padding:1rem">
+      <div style="font-size:1.5rem;margin-bottom:0.4rem">${iconMap[t]}</div>
+      <div style="font-size:0.78rem;font-weight:700;color:var(--navy)">${t}</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--navy);line-height:1.1">${count}</div>
+      <div style="font-size:0.7rem;color:var(--gray-500)">${vigentes} vigente${vigentes!==1?'s':''}</div>
+    </div>`;
+  }).join('');
+}
+
+function filterDocsByTipo(tipo) {
+  const rows = document.querySelectorAll('#tbody-docs tr:not(.empty-row)');
+  rows.forEach(r => {
+    if (!tipo) { r.style.display = ''; return; }
+    r.style.display = r.textContent.includes(tipo) ? '' : 'none';
+  });
+}
+
+function testDriveLink() {
+  const url = document.getElementById('d-drive').value.trim();
+  if (!url) { alert('Ingrese un enlace primero'); return; }
+  window.open(url, '_blank');
+}
+
+function editDoc(i) {
+  const d = DB.documentos[i];
+  document.getElementById('d-codigo').value = d.codigo||'';
+  document.getElementById('d-titulo').value = d.titulo||'';
+  document.getElementById('d-tipo').value = d.tipo||'Procedimiento';
+  document.getElementById('d-version').value = d.version||'';
+  document.getElementById('d-fecha').value = d.fecha||'';
+  document.getElementById('d-proxima').value = d.proxima||'';
+  document.getElementById('d-elabora').value = d.elabora||'';
+  document.getElementById('d-revisa').value = d.revisa||'';
+  document.getElementById('d-aprueba').value = d.aprueba||'';
+  document.getElementById('d-estado').value = d.estado||'Vigente';
+  document.getElementById('d-desc').value = d.desc||'';
+  document.getElementById('d-drive').value = d.drive||'';
+  document.getElementById('d-proceso').value = d.proceso||'';
+  document.getElementById('d-ubicacion').value = d.ubicacion||'';
+  document.getElementById('d-keywords').value = d.keywords||'';
+  // Remove old, re-save on submit
+  DB.documentos.splice(i, 1);
+  openModal('modal-doc');
+}
+
+function exportListadoMaestro() {
+  if (!DB.documentos.length) { alert('No hay documentos para exportar'); return; }
+  const emp = DB.empresa.nombre || 'Organización';
+  const fecha = new Date().toLocaleDateString('es-CO');
+  let html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+  <title>Listado Maestro — ${emp}</title>
+  <style>
+    body{font-family:Arial,sans-serif;font-size:11px;margin:20px}
+    h1{font-size:16px;color:#0a1628;margin-bottom:4px}
+    h2{font-size:12px;color:#555;margin-bottom:12px;font-weight:normal}
+    table{width:100%;border-collapse:collapse;margin-top:10px}
+    th{background:#0a1628;color:#c8972a;padding:6px 8px;text-align:left;font-size:10px}
+    td{padding:5px 8px;border-bottom:1px solid #ddd;vertical-align:top}
+    tr:nth-child(even){background:#f9f9f9}
+    .badge{display:inline-block;padding:2px 6px;border-radius:3px;font-size:9px;font-weight:bold}
+    .vigente{background:#d4edda;color:#155724}
+    .revision{background:#fff3cd;color:#856404}
+    .obsoleto{background:#f8d7da;color:#721c24}
+    .footer{margin-top:20px;font-size:9px;color:#999;border-top:1px solid #ddd;padding-top:8px}
+  </style></head><body>
+  <h1>LISTADO MAESTRO DE DOCUMENTOS Y REGISTROS — ${emp.toUpperCase()}</h1>
+  <h2>ISO 9001:2015 — Cláusula 7.5 | Generado: ${fecha} | Total: ${DB.documentos.length} documento(s)</h2>
+  <table><thead><tr>
+    <th>#</th><th>Código</th><th>Título</th><th>Tipo</th><th>Versión</th>
+    <th>Fecha emisión</th><th>Próx. revisión</th><th>Elaboró</th><th>Revisó</th>
+    <th>Aprobó</th><th>Proceso</th><th>Estado</th><th>Enlace</th>
+  </tr></thead><tbody>`;
+  DB.documentos.forEach((d,i) => {
+    const cls = d.estado==='Vigente'?'vigente':d.estado==='En revisión'?'revision':'obsoleto';
+    const link = d.drive ? `<a href="${d.drive}" target="_blank">Ver archivo</a>` : '—';
+    html += `<tr>
+      <td>${i+1}</td><td><strong>${d.codigo}</strong></td><td>${d.titulo}</td>
+      <td>${d.tipo}</td><td>v${d.version}</td>
+      <td>${fDate(d.fecha)}</td><td>${fDate(d.proxima)}</td>
+      <td>${d.elabora||'—'}</td><td>${d.revisa||'—'}</td><td>${d.aprueba||'—'}</td>
+      <td>${d.proceso||'—'}</td>
+      <td><span class="badge ${cls}">${d.estado}</span></td>
+      <td>${link}</td>
+    </tr>`;
+  });
+  html += `</tbody></table>
+  <div class="footer">Documento generado por SGC ISO 9001 — ${emp} — ${fecha}</div>
+  </body></html>`;
+  const blob = new Blob([html], {type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Listado_Maestro_Documentos_${new Date().toISOString().slice(0,10)}.html`;
+  a.click(); URL.revokeObjectURL(url);
 }
 
 // ══════════════════ PROCESOS ══════════════════
