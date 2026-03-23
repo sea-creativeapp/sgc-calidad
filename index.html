@@ -1521,6 +1521,14 @@ function saveProc() {
   if (!p.nombre) { alert('Complete el nombre del proceso'); return; }
   DB.procesos.push(p); save(); renderProc(); closeModal('modal-proc'); clearModal('p-');
 }
+function editProc(i) {
+  const p = DB.procesos[i];
+  sv('p-codigo',p.codigo); sv('p-nombre',p.nombre); sv('p-tipo',p.tipo);
+  sv('p-resp',p.resp); sv('p-obj',p.obj); sv('p-entradas',p.entradas);
+  sv('p-salidas',p.salidas); sv('p-indicador',p.indicador);
+  sv('p-recursos',p.recursos); sv('p-docs',p.docs);
+  DB.procesos.splice(i,1); openModal('modal-proc');
+}
 function renderProc() {
   const tb = document.getElementById('tbody-proc');
   if (!DB.procesos.length) { tb.innerHTML = emptyRow(8); updateBadge('badge-proc',0); return; }
@@ -1534,7 +1542,10 @@ function renderProc() {
       <td>${p.resp}</td>
       <td>${p.indicador}</td>
       <td style="max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.recursos}</td>
-      <td><button class="btn btn-danger btn-sm btn-icon" onclick="delItem('procesos',${i},renderProc)">🗑</button></td>
+      <td style="display:flex;gap:0.3rem">
+        <button class="btn btn-outline btn-sm btn-icon" onclick="editProc(${i})" title="Editar">✏️</button>
+        <button class="btn btn-danger btn-sm btn-icon" onclick="delItem('procesos',${i},renderProc)">🗑</button>
+      </td>
     </tr>`).join('');
   updateBadge('badge-proc', DB.procesos.length);
 }
@@ -1551,6 +1562,13 @@ function saveRisk() {
   if (!r.desc) { alert('Complete la descripción'); return; }
   DB.riesgos.push(r); save(); renderRisk(); closeModal('modal-risk'); clearModal('r-');
 }
+function editRisk(i) {
+  const r = DB.riesgos[i];
+  sv('r-tipo',r.tipo); sv('r-proceso',r.proceso); sv('r-desc',r.desc);
+  sv('r-prob',String(r.prob)); sv('r-impacto',String(r.impacto));
+  sv('r-accion',r.accion); sv('r-resp',r.resp); sv('r-fecha',r.fecha); sv('r-estado',r.estado);
+  DB.riesgos.splice(i,1); openModal('modal-risk');
+}
 function renderRisk() {
   const tb = document.getElementById('tbody-risk');
   if (!DB.riesgos.length) { tb.innerHTML = emptyRow(11); updateBadge('badge-risk',0,'warn'); return; }
@@ -1565,7 +1583,10 @@ function renderRisk() {
       <td style="max-width:130px">${r.accion}</td>
       <td>${r.resp}</td>
       <td>${statusBadge(r.estado)}</td>
-      <td><button class="btn btn-danger btn-sm btn-icon" onclick="delItem('riesgos',${i},renderRisk)">🗑</button></td>
+      <td style="display:flex;gap:0.3rem">
+        <button class="btn btn-outline btn-sm btn-icon" onclick="editRisk(${i})" title="Editar">✏️</button>
+        <button class="btn btn-danger btn-sm btn-icon" onclick="delItem('riesgos',${i},renderRisk)">🗑</button>
+      </td>
     </tr>`).join('');
   updateBadge('badge-risk', DB.riesgos.length, 'warn');
 }
@@ -1579,6 +1600,13 @@ function saveKpi() {
   };
   if (!k.nombre) { alert('Complete el nombre del KPI'); return; }
   DB.kpis.push(k); save(); renderKpi(); closeModal('modal-kpi'); clearModal('k-');
+}
+function editKpi(i) {
+  const k = DB.kpis[i];
+  sv('k-codigo',k.codigo); sv('k-nombre',k.nombre); sv('k-proceso',k.proceso);
+  sv('k-freq',k.freq); sv('k-formula',k.formula); sv('k-meta',k.meta);
+  sv('k-resultado',k.resultado); sv('k-resp',k.resp); sv('k-fuente',k.fuente); sv('k-obs',k.obs);
+  DB.kpis.splice(i,1); openModal('modal-kpi');
 }
 function renderKpi() {
   const tb = document.getElementById('tbody-kpi');
@@ -1598,7 +1626,10 @@ function renderKpi() {
       <td style="font-family:'DM Mono',monospace;font-size:0.72rem">${k.formula}</td>
       <td>${k.freq}</td><td>${k.meta}</td><td>${k.resultado}</td>
       <td>${badge}</td><td>${k.resp}</td>
-      <td><button class="btn btn-danger btn-sm btn-icon" onclick="delItem('kpis',${i},renderKpi)">🗑</button></td>
+      <td style="display:flex;gap:0.3rem">
+        <button class="btn btn-outline btn-sm btn-icon" onclick="editKpi(${i})" title="Editar">✏️</button>
+        <button class="btn btn-danger btn-sm btn-icon" onclick="delItem('kpis',${i},renderKpi)">🗑</button>
+      </td>
     </tr>`;
   }).join('');
   updateBadge('badge-kpi', DB.kpis.length);
@@ -1617,6 +1648,14 @@ function saveNc() {
   if (!nc.desc) { alert('Complete la descripción'); return; }
   DB.noConformidades.push(nc); save(); renderNc(); closeModal('modal-nc'); clearModal('nc-');
 }
+function editNc(i) {
+  const nc = DB.noConformidades[i];
+  sv('nc-fecha',nc.fecha); sv('nc-origen',nc.origen); sv('nc-desc',nc.desc);
+  sv('nc-proceso',nc.proceso); sv('nc-requisito',nc.requisito);
+  sv('nc-causa',nc.causa); sv('nc-accion',nc.accion);
+  sv('nc-resp',nc.resp); sv('nc-fechacierre',nc.fechacierre); sv('nc-estado',nc.estado);
+  DB.noConformidades.splice(i,1); openModal('modal-nc');
+}
 function renderNc() {
   const tb = document.getElementById('tbody-nc');
   if (!DB.noConformidades.length) { tb.innerHTML = emptyRow(11); updateBadge('badge-nc',0,'warn'); return; }
@@ -1630,7 +1669,10 @@ function renderNc() {
       <td style="max-width:120px">${nc.accion}</td>
       <td>${fDate(nc.fechacierre)}</td>
       <td>${statusBadge(nc.estado)}</td>
-      <td><button class="btn btn-danger btn-sm btn-icon" onclick="delItem('noConformidades',${i},renderNc)">🗑</button></td>
+      <td style="display:flex;gap:0.3rem">
+        <button class="btn btn-outline btn-sm btn-icon" onclick="editNc(${i})" title="Editar">✏️</button>
+        <button class="btn btn-danger btn-sm btn-icon" onclick="delItem('noConformidades',${i},renderNc)">🗑</button>
+      </td>
     </tr>`).join('');
   const abiertas = DB.noConformidades.filter(n => n.estado === 'Abierta' || n.estado === 'En proceso').length;
   updateBadge('badge-nc', abiertas, 'warn');
@@ -1647,6 +1689,13 @@ function saveAcc() {
   };
   if (!a.desc) { alert('Complete la descripción'); return; }
   DB.acciones.push(a); save(); renderAcc(); closeModal('modal-acc'); clearModal('a-');
+}
+function editAcc(i) {
+  const a = DB.acciones[i];
+  sv('a-desc',a.desc); sv('a-origen',a.origen); sv('a-proceso',a.proceso);
+  sv('a-resp',a.resp); sv('a-inicio',a.inicio); sv('a-limite',a.limite);
+  sv('a-avance',a.avance); sv('a-estado',a.estado);
+  DB.acciones.splice(i,1); openModal('modal-acc');
 }
 function renderAcc() {
   const tb = document.getElementById('tbody-acc');
@@ -1665,7 +1714,10 @@ function renderAcc() {
         </div>
       </td>
       <td>${statusBadge(a.estado)}</td>
-      <td><button class="btn btn-danger btn-sm btn-icon" onclick="delItem('acciones',${i},renderAcc)">🗑</button></td>
+      <td style="display:flex;gap:0.3rem">
+        <button class="btn btn-outline btn-sm btn-icon" onclick="editAcc(${i})" title="Editar">✏️</button>
+        <button class="btn btn-danger btn-sm btn-icon" onclick="delItem('acciones',${i},renderAcc)">🗑</button>
+      </td>
     </tr>`;
   }).join('');
   updateBadge('badge-acc', DB.acciones.length);
@@ -1681,6 +1733,13 @@ function saveObj() {
   if (!o.desc) { alert('Complete el objetivo'); return; }
   DB.objetivos.push(o); save(); renderObj(); closeModal('modal-obj'); clearModal('o-');
 }
+function editObj(i) {
+  const o = DB.objetivos[i];
+  sv('o-codigo',o.codigo); sv('o-proceso',o.proceso); sv('o-desc',o.desc);
+  sv('o-indicador',o.indicador); sv('o-meta',o.meta); sv('o-resp',o.resp);
+  sv('o-plazo',o.plazo); sv('o-recursos',o.recursos); sv('o-estado',o.estado);
+  DB.objetivos.splice(i,1); openModal('modal-obj');
+}
 function renderObj() {
   const tb = document.getElementById('tbody-obj');
   if (!DB.objetivos.length) { tb.innerHTML = emptyRow(8); return; }
@@ -1690,7 +1749,10 @@ function renderObj() {
       <td>${o.desc}</td><td>${o.indicador}</td><td>${o.meta}</td>
       <td>${o.resp}</td><td>${fDate(o.plazo)}</td>
       <td>${statusBadge(o.estado)}</td>
-      <td><button class="btn btn-danger btn-sm btn-icon" onclick="delItem('objetivos',${i},renderObj)">🗑</button></td>
+      <td style="display:flex;gap:0.3rem">
+        <button class="btn btn-outline btn-sm btn-icon" onclick="editObj(${i})" title="Editar">✏️</button>
+        <button class="btn btn-danger btn-sm btn-icon" onclick="delItem('objetivos',${i},renderObj)">🗑</button>
+      </td>
     </tr>`).join('');
 }
 
@@ -1703,6 +1765,12 @@ function saveParte() {
   if (!p.nombre) { alert('Complete el nombre'); return; }
   DB.partes.push(p); save(); renderPartes(); closeModal('modal-parte'); clearModal('pi-');
 }
+function editParte(i) {
+  const p = DB.partes[i];
+  sv('pi-nombre',p.nombre); sv('pi-tipo',p.tipo);
+  sv('pi-necesidades',p.necesidades); sv('pi-requisitos',p.requisitos); sv('pi-seguimiento',p.seguimiento);
+  DB.partes.splice(i,1); openModal('modal-parte');
+}
 function renderPartes() {
   const tb = document.getElementById('tbody-partes');
   if (!DB.partes.length) { tb.innerHTML = emptyRow(6); return; }
@@ -1711,7 +1779,10 @@ function renderPartes() {
       <td><strong>${p.nombre}</strong></td>
       <td><span class="badge ${p.tipo==='Interna'?'badge-navy':'badge-blue'}">${p.tipo}</span></td>
       <td>${p.necesidades}</td><td>${p.requisitos}</td><td>${p.seguimiento}</td>
-      <td><button class="btn btn-danger btn-sm btn-icon" onclick="delItem('partes',${i},renderPartes)">🗑</button></td>
+      <td style="display:flex;gap:0.3rem">
+        <button class="btn btn-outline btn-sm btn-icon" onclick="editParte(${i})" title="Editar">✏️</button>
+        <button class="btn btn-danger btn-sm btn-icon" onclick="delItem('partes',${i},renderPartes)">🗑</button>
+      </td>
     </tr>`).join('');
 }
 
@@ -1724,6 +1795,12 @@ function saveComp() {
   if (!c.nombre) { alert('Complete el nombre'); return; }
   DB.competencias.push(c); save(); renderComp(); closeModal('modal-comp'); clearModal('c-');
 }
+function editComp(i) {
+  const c = DB.competencias[i];
+  sv('c-nombre',c.nombre); sv('c-cargo',c.cargo); sv('c-edu',c.edu);
+  sv('c-form',c.form); sv('c-exp',c.exp); sv('c-hab',c.hab); sv('c-estado',c.estado);
+  DB.competencias.splice(i,1); openModal('modal-comp');
+}
 function renderComp() {
   const tb = document.getElementById('tbody-comp');
   if (!DB.competencias.length) { tb.innerHTML = emptyRow(8); return; }
@@ -1732,7 +1809,10 @@ function renderComp() {
       <td><strong>${c.nombre}</strong></td><td>${c.cargo}</td>
       <td>${c.edu}</td><td>${c.form}</td><td>${c.exp}</td><td>${c.hab}</td>
       <td>${statusBadge(c.estado)}</td>
-      <td><button class="btn btn-danger btn-sm btn-icon" onclick="delItem('competencias',${i},renderComp)">🗑</button></td>
+      <td style="display:flex;gap:0.3rem">
+        <button class="btn btn-outline btn-sm btn-icon" onclick="editComp(${i})" title="Editar">✏️</button>
+        <button class="btn btn-danger btn-sm btn-icon" onclick="delItem('competencias',${i},renderComp)">🗑</button>
+      </td>
     </tr>`).join('');
 }
 
@@ -1746,6 +1826,12 @@ function saveProv() {
   if (!p.nombre) { alert('Complete el nombre del proveedor'); return; }
   DB.proveedores.push(p); save(); renderProv(); closeModal('modal-prov'); clearModal('pv-');
 }
+function editProv(i) {
+  const p = DB.proveedores[i];
+  sv('pv-nombre',p.nombre); sv('pv-producto',p.producto); sv('pv-criterio',p.criterio);
+  sv('pv-fecha',p.fecha); sv('pv-calif',String(p.calif)); sv('pv-estado',p.estado);
+  DB.proveedores.splice(i,1); openModal('modal-prov');
+}
 function renderProv() {
   const tb = document.getElementById('tbody-prov');
   if (!DB.proveedores.length) { tb.innerHTML = emptyRow(7); updateBadge('badge-prov',0); return; }
@@ -1756,7 +1842,10 @@ function renderProv() {
       <td style="max-width:150px">${p.criterio}</td><td>${fDate(p.fecha)}</td>
       <td><span class="badge ${cl}">${p.calif}/100</span></td>
       <td>${statusBadge(p.estado)}</td>
-      <td><button class="btn btn-danger btn-sm btn-icon" onclick="delItem('proveedores',${i},renderProv)">🗑</button></td>
+      <td style="display:flex;gap:0.3rem">
+        <button class="btn btn-outline btn-sm btn-icon" onclick="editProv(${i})" title="Editar">✏️</button>
+        <button class="btn btn-danger btn-sm btn-icon" onclick="delItem('proveedores',${i},renderProv)">🗑</button>
+      </td>
     </tr>`;
   }).join('');
   updateBadge('badge-prov', DB.proveedores.length);
