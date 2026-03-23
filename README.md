@@ -1,0 +1,2 @@
+# sgc-calidad
+GD SGC
