@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de Listado Maestro — SGC ISO 9001</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0a1628; --navy-mid: #112040; --navy-light: #1a3060;
+  --gold: #c8972a; --gold-light: #e8b84b; --cream: #faf7f0;
+  --white: #fff; --green: #1a7a4a; --red: #c0392b; --orange: #e67e22;
+  --gray-100: #f4f4f6; --gray-200: #e8e8ed; --gray-500: #8a8a9a; --gray-700: #4a4a5a;
+  --shadow-lg: 0 20px 60px rgba(10,22,40,.18); --shadow-md: 0 8px 24px rgba(10,22,40,.10); --shadow-sm: 0 2px 8px rgba(10,22,40,.07);
+  --radius: 12px; --radius-sm: 7px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:var(--gray-100);color:var(--navy);min-height:100vh}
+
+header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);border-bottom:2px solid var(--gold);padding:0 2rem;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-lg)}
+.header-inner{max-width:1300px;margin:0 auto;display:flex;align-items:center;gap:1.25rem;height:68px}
+.logo{background:var(--gold);color:var(--navy);font-family:'DM Mono',monospace;font-size:.65rem;font-weight:500;padding:.3rem .65rem;border-radius:4px;letter-spacing:.08em;flex-shrink:0}
+.header-title{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--cream);flex:1}
+.header-title span{color:var(--gold)}
+
+.container{max-width:1300px;margin:0 auto;padding:2rem}
+
+/* ── DROP ZONE ── */
+.drop-zone{border:2.5px dashed var(--gold);border-radius:var(--radius);background:var(--white);padding:3rem 2rem;text-align:center;cursor:pointer;transition:all .25s;position:relative;margin-bottom:1.5rem}
+.drop-zone:hover,.drop-zone.over{background:#fdf6e3;border-color:var(--gold-light);box-shadow:var(--shadow-md)}
+.drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.drop-icon{font-size:3rem;margin-bottom:.75rem}
+.drop-title{font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--navy);margin-bottom:.35rem}
+.drop-sub{font-size:.85rem;color:var(--gray-500)}
+.drop-sub strong{color:var(--gold)}
+
+/* ── CARDS ── */
+.cards-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem}
+.stat-card{background:var(--white);border-radius:var(--radius);padding:1.25rem;box-shadow:var(--shadow-sm);border:1px solid var(--gray-200)}
+.stat-num{font-family:'DM Serif Display',serif;font-size:2.4rem;color:var(--navy);line-height:1}
+.stat-lbl{font-size:.75rem;color:var(--gray-500);margin-top:.2rem}
+
+/* ── TOOLBAR ── */
+.toolbar{background:var(--white);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;box-shadow:var(--shadow-sm);border:1px solid var(--gray-200)}
+.toolbar-title{font-size:.9rem;font-weight:700;color:var(--navy);flex:1}
+.search-input{padding:.45rem .8rem;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:.82rem;color:var(--navy);width:200px;font-family:'Outfit',sans-serif}
+.search-input:focus{outline:none;border-color:var(--gold)}
+select.filter-sel{padding:.45rem .7rem;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:.82rem;color:var(--navy);font-family:'Outfit',sans-serif;cursor:pointer}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1rem;border-radius:var(--radius-sm);font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;border:none;transition:all .2s;white-space:nowrap}
+.btn-primary{background:var(--navy);color:var(--gold)}.btn-primary:hover{background:var(--navy-light)}
+.btn-gold{background:var(--gold);color:var(--navy)}.btn-gold:hover{background:var(--gold-light)}
+.btn-outline{background:transparent;border:1.5px solid var(--navy);color:var(--navy)}.btn-outline:hover{background:var(--navy);color:#fff}
+.btn-green{background:var(--green);color:#fff}.btn-green:hover{background:#155a38}
+.btn-sm{padding:.3rem .65rem;font-size:.75rem}
+
+/* ── TABLE ── */
+.table-wrap{background:var(--white);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);border:1px solid var(--gray-200);overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:900px}
+th{background:var(--navy);color:var(--gold);font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.08em;text-transform:uppercase;padding:.7rem .9rem;text-align:left;white-space:nowrap}
+td{padding:.65rem .9rem;border-bottom:1px solid var(--gray-200);font-size:.83rem;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f7f9ff}
+td input,td select{border:1.5px solid var(--gray-200);border-radius:5px;padding:.25rem .5rem;font-family:'Outfit',sans-serif;font-size:.8rem;color:var(--navy);width:100%;background:var(--white);transition:border-color .15s}
+td input:focus,td select:focus{outline:none;border-color:var(--gold)}
+.empty-msg{text-align:center;color:var(--gray-500);font-style:italic;padding:3rem}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;padding:.18rem .55rem;border-radius:20px;font-family:'DM Mono',monospace;font-size:.62rem;font-weight:600;letter-spacing:.04em;white-space:nowrap}
+.b-green{background:#d4edda;color:#155724}.b-orange{background:#fff3cd;color:#856404}
+.b-red{background:#f8d7da;color:#721c24}.b-navy{background:var(--navy);color:var(--gold)}
+.b-gray{background:var(--gray-200);color:var(--gray-700)}.b-blue{background:#d0e8ff;color:#084298}
+
+/* ── PROGRESS ── */
+.progress-bar{height:6px;background:var(--gray-200);border-radius:3px;overflow:hidden;margin-top:.4rem}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:3px;transition:width .4s}
+
+/* ── EDIT ROW ── */
+.editing td{background:#fffbf0 !important}
+
+/* ── ALERT ── */
+.alert{padding:.9rem 1.1rem;border-radius:var(--radius-sm);font-size:.83rem;margin-bottom:1rem;display:flex;gap:.6rem;align-items:flex-start}
+.alert-info{background:#d0e8ff;color:#084298;border-left:4px solid #0d6efd}
+.alert-success{background:#d4edda;color:#155724;border-left:4px solid var(--green)}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(10,22,40,.7);display:none;align-items:center;justify-content:center;padding:1.5rem;backdrop-filter:blur(4px)}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border-radius:var(--radius);padding:2rem;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);animation:slideUp .2s ease}
+@keyframes slideUp{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
+.modal-title{font-family:'DM Serif Display',serif;font-size:1.3rem;color:var(--navy);margin-bottom:1.25rem}
+.form-grid{display:grid;gap:.85rem}
+.form-grid-2{grid-template-columns:1fr 1fr}
+.form-group{display:flex;flex-direction:column;gap:.3rem}
+.form-group label{font-size:.76rem;font-weight:700;color:var(--navy)}
+.form-group input,.form-group select,.form-group textarea{padding:.5rem .75rem;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-family:'Outfit',sans-serif;font-size:.84rem;color:var(--navy)}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--gold)}
+.modal-footer{display:flex;gap:.75rem;justify-content:flex-end;margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--gray-200)}
+
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-thumb{background:rgba(200,151,42,.4);border-radius:3px}
+
+@media print{
+  header,.toolbar,.drop-zone,.cards-row,.no-print{display:none!important}
+  .table-wrap{box-shadow:none;border:1px solid #ccc}
+  td input,td select{border:none;padding:0}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">ISO 9001:2015</div>
+    <div class="header-title">Generador de <span>Listado Maestro</span> de Documentos</div>
+    <div style="font-family:'DM Mono',monospace;font-size:.7rem;color:var(--gray-500);text-align:right">
+      SGC-SG-RG-001<br>
+      <span id="fecha-hoy" style="color:var(--gold-light)"></span>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="alert alert-info no-print">
+    📂 <div><strong>¿Cómo funciona?</strong> Arrastre sus carpetas o seleccione múltiples archivos desde su PC. La herramienta lee los nombres, detecta el código y tipo automáticamente, y genera el Listado Maestro listo para auditoría. Puede editar cualquier campo antes de exportar.</div>
+  </div>
+
+  <!-- DROP ZONE -->
+  <div class="drop-zone no-print" id="drop-zone">
+    <input type="file" id="file-input" multiple accept=".pdf,.docx,.doc,.xlsx,.xls,.pptx,.txt,.png,.jpg">
+    <div class="drop-icon">📁</div>
+    <div class="drop-title">Arrastre sus archivos aquí</div>
+    <div class="drop-sub">o haga clic para seleccionar · Compatible con <strong>PDF, Word, Excel, PowerPoint</strong> y más<br>
+    Puede seleccionar <strong>todos los archivos de una carpeta a la vez</strong> con Ctrl+A</div>
+  </div>
+
+  <!-- STATS -->
+  <div class="cards-row" id="stats-row" style="display:none">
+    <div class="stat-card">
+      <div class="stat-num" id="st-total">0</div>
+      <div class="stat-lbl">Documentos cargados</div>
+      <div class="progress-bar"><div class="progress-fill" id="pf-total" style="width:0%"></div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="st-proc">0</div>
+      <div class="stat-lbl">Procedimientos</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="st-inst">0</div>
+      <div class="stat-lbl">Instructivos</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="st-form">0</div>
+      <div class="stat-lbl">Formatos / Registros</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="st-otros">0</div>
+      <div class="stat-lbl">Otros documentos</div>
+    </div>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar no-print">
+    <span class="toolbar-title">Listado Maestro de Documentos</span>
+    <input class="search-input" type="text" placeholder="🔍 Buscar..." oninput="filtrar(this.value)">
+    <select class="filter-sel" onchange="filtrarTipo(this.value)">
+      <option value="">Todos los tipos</option>
+      <option>Procedimiento</option><option>Instructivo</option><option>Manual</option>
+      <option>Formato / Registro</option><option>Política</option><option>Plan</option>
+      <option>Protocolo</option><option>Ficha Técnica</option><option>Informe / Acta</option><option>Otro</option>
+    </select>
+    <select class="filter-sel" onchange="filtrarProceso(this.value)" id="sel-proceso">
+      <option value="">Todos los procesos</option>
+    </select>
+    <button class="btn btn-outline btn-sm" onclick="openModal()">➕ Agregar manual</button>
+    <button class="btn btn-primary btn-sm" onclick="exportarCSV()">📊 Exportar CSV</button>
+    <button class="btn btn-gold btn-sm" onclick="exportarHTML()">📄 Listado para auditoría</button>
+    <button class="btn btn-green btn-sm" onclick="window.print()">🖨️ Imprimir</button>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <table id="tabla-docs">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Código detectado</th>
+          <th>Nombre del documento</th>
+          <th>Tipo</th>
+          <th>Proceso</th>
+          <th>Versión</th>
+          <th>Fecha archivo</th>
+          <th>Formato</th>
+          <th>Estado</th>
+          <th>Enlace / Ubicación</th>
+          <th class="no-print">Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <tr><td colspan="11" class="empty-msg">Cargue sus archivos para generar el listado automáticamente</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- MODAL agregar manual -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-title">Agregar documento manualmente</div>
+    <div class="form-grid form-grid-2">
+      <div class="form-group"><label>Código</label><input id="m-codigo" placeholder="SGC-SG-PO-001"></div>
+      <div class="form-group"><label>Nombre del documento</label><input id="m-nombre" placeholder="Nombre completo"></div>
+      <div class="form-group"><label>Tipo</label>
+        <select id="m-tipo">
+          <option>Procedimiento</option><option>Instructivo</option><option>Manual</option>
+          <option>Formato / Registro</option><option>Política</option><option>Plan</option>
+          <option>Protocolo</option><option>Ficha Técnica</option><option>Informe / Acta</option><option>Otro</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Proceso</label>
+        <select id="m-proceso">
+          <option>Planeación Estratégica</option>
+          <option>Sistemas de Gestión</option>
+          <option>Talento Humano y Jurídico</option>
+          <option>Comercial</option>
+          <option>Aprovechamiento</option>
+          <option>Logística y Transporte</option>
+          <option>Mantenimiento</option>
+          <option>Contabilidad y Financiero</option>
+          <option>General / Transversal</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Versión</label><input id="m-version" placeholder="v1.0"></div>
+      <div class="form-group"><label>Estado</label>
+        <select id="m-estado"><option>Vigente</option><option>En revisión</option><option>Obsoleto</option></select>
+      </div>
+      <div class="form-group" style="grid-column:span 2"><label>Enlace Google Drive (opcional)</label>
+        <input id="m-link" placeholder="https://drive.google.com/...">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-gold" onclick="agregarManual()">➕ Agregar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════ CONSTANTES ══════════════════
+const TIPOS_MAPA = {
+  'PO':'Procedimiento','IT':'Instructivo','MC':'Manual','RG':'Formato / Registro',
+  'PL':'Plan','PR':'Protocolo','FT':'Ficha Técnica','IN':'Informe / Acta',
+  'PY':'Política','MA':'Manual'
+};
+const PROCESOS_MAPA = {
+  'PE':'Planeación Estratégica','SG':'Sistemas de Gestión',
+  'TH':'Talento Humano y Jurídico','CO':'Comercial',
+  'AP':'Aprovechamiento','LT':'Logística y Transporte',
+  'MA':'Mantenimiento','CF':'Contabilidad y Financiero'
+};
+const EXTENSIONES = {
+  'pdf':'PDF','docx':'Word','doc':'Word','xlsx':'Excel','xls':'Excel',
+  'pptx':'PowerPoint','ppt':'PowerPoint','txt':'Texto','png':'Imagen',
+  'jpg':'Imagen','jpeg':'Imagen','mp4':'Video','zip':'Comprimido'
+};
+const COLORES_TIPO = {
+  'Procedimiento':'b-navy','Instructivo':'b-blue','Manual':'b-blue',
+  'Formato / Registro':'b-green','Política':'b-navy','Plan':'b-orange',
+  'Protocolo':'b-orange','Ficha Técnica':'b-gray','Informe / Acta':'b-gray','Otro':'b-gray'
+};
+
+let docs = [];
+let filtrados = [];
+
+// ══════════════════ FECHA ══════════════════
+document.getElementById('fecha-hoy').textContent =
+  new Date().toLocaleDateString('es-CO',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+
+// ══════════════════ DRAG & DROP ══════════════════
+const dropZone = document.getElementById('drop-zone');
+const fileInput = document.getElementById('file-input');
+
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('over'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault(); dropZone.classList.remove('over');
+  procesarArchivos(e.dataTransfer.files);
+});
+fileInput.addEventListener('change', e => procesarArchivos(e.target.files));
+
+// ══════════════════ PROCESAR ARCHIVOS ══════════════════
+function procesarArchivos(files) {
+  const nuevos = [];
+  for (const file of files) {
+    const nombre = file.name;
+    const ext = nombre.split('.').pop().toLowerCase();
+    const sinExt = nombre.replace(/\.[^.]+$/, '');
+    const info = extraerInfo(sinExt, ext, file.lastModified);
+    // Evitar duplicados
+    if (!docs.find(d => d.nombreOriginal === nombre)) {
+      nuevos.push(info);
+    }
+  }
+  docs = [...docs, ...nuevos];
+  filtrados = [...docs];
+  renderizar();
+  actualizarEstadisticas();
+  actualizarSelectProceso();
+  document.getElementById('stats-row').style.display = 'grid';
+}
+
+function extraerInfo(sinExt, ext, lastModified) {
+  // Detectar código según patrones: SGC-XX-YY-NNN o XX-YY-NNN
+  let codigo = '', tipoDetect = '', procesoDetect = '';
+
+  // Patrón: SGC-PE-PO-001 o SGC-LT-IT-003
+  const p1 = sinExt.match(/^(SGC[-_])?([A-Z]{2})[-_]([A-Z]{2,3})[-_](\d{2,4})/i);
+  if (p1) {
+    const procSig = p1[2].toUpperCase();
+    const tipoSig = p1[3].toUpperCase();
+    const num = p1[4];
+    procesoDetect = PROCESOS_MAPA[procSig] || procSig;
+    tipoDetect = TIPOS_MAPA[tipoSig] || tipoDetect;
+    codigo = `SGC-${procSig}-${tipoSig}-${num}`;
+  }
+
+  // Patrón: PO-001, IT-003 (sin proceso)
+  if (!codigo) {
+    const p2 = sinExt.match(/^(PO|IT|MC|RG|PL|PR|FT|IN|PY|MA)[-_](\d{2,4})/i);
+    if (p2) {
+      tipoDetect = TIPOS_MAPA[p2[1].toUpperCase()] || 'Otro';
+      codigo = `SGC-${p2[1].toUpperCase()}-${p2[2]}`;
+    }
+  }
+
+  // Detectar tipo por palabras clave en el nombre
+  if (!tipoDetect) {
+    const n = sinExt.toLowerCase();
+    if (n.includes('procedimiento') || n.includes('proc')) tipoDetect = 'Procedimiento';
+    else if (n.includes('instructivo') || n.includes('instruc')) tipoDetect = 'Instructivo';
+    else if (n.includes('manual')) tipoDetect = 'Manual';
+    else if (n.includes('formato') || n.includes('form') || n.includes('registro') || n.includes('reg')) tipoDetect = 'Formato / Registro';
+    else if (n.includes('politica') || n.includes('política') || n.includes('policy')) tipoDetect = 'Política';
+    else if (n.includes('plan')) tipoDetect = 'Plan';
+    else if (n.includes('protocolo')) tipoDetect = 'Protocolo';
+    else if (n.includes('ficha') || n.includes('tecnica') || n.includes('técnica')) tipoDetect = 'Ficha Técnica';
+    else if (n.includes('acta') || n.includes('informe') || n.includes('reporte')) tipoDetect = 'Informe / Acta';
+    else tipoDetect = 'Otro';
+  }
+
+  // Detectar proceso por palabras clave si no se detectó
+  if (!procesoDetect) {
+    const n = sinExt.toLowerCase();
+    if (n.includes('estrateg') || n.includes('planeac')) procesoDetect = 'Planeación Estratégica';
+    else if (n.includes('calidad') || n.includes('sgc') || n.includes('ambiental') || n.includes('sst') || n.includes('hse')) procesoDetect = 'Sistemas de Gestión';
+    else if (n.includes('talento') || n.includes('human') || n.includes('juridic') || n.includes('jurídic') || n.includes('personal') || n.includes('contrat')) procesoDetect = 'Talento Humano y Jurídico';
+    else if (n.includes('comercial') || n.includes('ventas') || n.includes('cliente')) procesoDetect = 'Comercial';
+    else if (n.includes('aprovech') || n.includes('planta') || n.includes('reciclaje') || n.includes('clasificac')) procesoDetect = 'Aprovechamiento';
+    else if (n.includes('logist') || n.includes('transporte') || n.includes('ruta') || n.includes('vehic') || n.includes('recolec') || n.includes('manifiesto')) procesoDetect = 'Logística y Transporte';
+    else if (n.includes('mantenim') || n.includes('equipos') || n.includes('taller')) procesoDetect = 'Mantenimiento';
+    else if (n.includes('contab') || n.includes('financ') || n.includes('presupuest') || n.includes('nomina') || n.includes('nómina') || n.includes('dian')) procesoDetect = 'Contabilidad y Financiero';
+    else procesoDetect = 'General / Transversal';
+  }
+
+  // Detectar versión en el nombre
+  let version = 'v1.0';
+  const vMatch = sinExt.match(/[_\-\s][Vv](\d+[\.\d]*)/);
+  if (vMatch) version = 'v' + vMatch[1];
+  const v2 = sinExt.match(/[_\-\s][Vv][Ee][Rr][\._\-\s]?(\d+)/i);
+  if (v2) version = 'v' + v2[1] + '.0';
+
+  // Nombre limpio (sin código si ya estaba al inicio)
+  let nombreLimpio = sinExt
+    .replace(/^(SGC[-_])?[A-Z]{2}[-_][A-Z]{2,3}[-_]\d{2,4}[-_\s]*/i, '')
+    .replace(/[_\-\s][Vv]\d+[\.\d]*/g, '')
+    .replace(/[-_]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!nombreLimpio) nombreLimpio = sinExt.replace(/[-_]/g, ' ').trim();
+  nombreLimpio = nombreLimpio.charAt(0).toUpperCase() + nombreLimpio.slice(1);
+
+  const fecha = lastModified ? new Date(lastModified).toLocaleDateString('es-CO') : '—';
+
+  return {
+    id: Math.random().toString(36).substr(2,8),
+    nombreOriginal: sinExt + (ext ? '.' + ext : ''),
+    codigo,
+    nombre: nombreLimpio,
+    tipo: tipoDetect,
+    proceso: procesoDetect,
+    version,
+    fecha,
+    ext: ext.toUpperCase(),
+    formato: EXTENSIONES[ext] || ext.toUpperCase(),
+    estado: 'Vigente',
+    link: ''
+  };
+}
+
+// ══════════════════ RENDER ══════════════════
+function renderizar(lista) {
+  const data = lista || filtrados;
+  const tbody = document.getElementById('tbody');
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="11" class="empty-msg">No hay documentos que coincidan con el filtro</td></tr>';
+    return;
+  }
+  tbody.innerHTML = data.map((d, i) => {
+    const tipoCls = COLORES_TIPO[d.tipo] || 'b-gray';
+    const estadoCls = d.estado === 'Vigente' ? 'b-green' : d.estado === 'En revisión' ? 'b-orange' : 'b-red';
+    const fmtCls = d.ext === 'PDF' ? 'b-red' : d.ext === 'DOCX' || d.ext === 'DOC' ? 'b-blue' : d.ext === 'XLSX' || d.ext === 'XLS' ? 'b-green' : 'b-gray';
+    const linkCell = d.link
+      ? `<a href="${d.link}" target="_blank" class="btn btn-gold btn-sm" style="font-size:.7rem">📎 Abrir</a>`
+      : `<input value="${d.link||''}" placeholder="Pegar enlace Drive..." onchange="actualizarCampo('${d.id}','link',this.value)" style="min-width:140px">`;
+    return `<tr id="row-${d.id}">
+      <td style="color:var(--gray-500);font-family:'DM Mono',monospace;font-size:.68rem;text-align:center">${i+1}</td>
+      <td><input value="${d.codigo}" onchange="actualizarCampo('${d.id}','codigo',this.value)" style="min-width:130px;font-family:'DM Mono',monospace;font-size:.75rem"></td>
+      <td><input value="${d.nombre}" onchange="actualizarCampo('${d.id}','nombre',this.value)" style="min-width:200px"></td>
+      <td><select onchange="actualizarCampo('${d.id}','tipo',this.value)">
+        ${['Procedimiento','Instructivo','Manual','Formato / Registro','Política','Plan','Protocolo','Ficha Técnica','Informe / Acta','Otro'].map(t=>`<option${t===d.tipo?' selected':''}>${t}</option>`).join('')}
+      </select></td>
+      <td><select onchange="actualizarCampo('${d.id}','proceso',this.value)">
+        ${['Planeación Estratégica','Sistemas de Gestión','Talento Humano y Jurídico','Comercial','Aprovechamiento','Logística y Transporte','Mantenimiento','Contabilidad y Financiero','General / Transversal'].map(p=>`<option${p===d.proceso?' selected':''}>${p}</option>`).join('')}
+      </select></td>
+      <td><input value="${d.version}" onchange="actualizarCampo('${d.id}','version',this.value)" style="min-width:60px;text-align:center"></td>
+      <td style="color:var(--gray-500);font-size:.78rem;white-space:nowrap">${d.fecha}</td>
+      <td><span class="badge ${fmtCls}">${d.ext}</span></td>
+      <td><select onchange="actualizarCampo('${d.id}','estado',this.value)">
+        ${['Vigente','En revisión','Obsoleto'].map(s=>`<option${s===d.estado?' selected':''}>${s}</option>`).join('')}
+      </select></td>
+      <td>${linkCell}</td>
+      <td class="no-print" style="white-space:nowrap">
+        <button class="btn btn-outline btn-sm" onclick="eliminar('${d.id}')" style="color:var(--red);border-color:var(--red)">🗑</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function actualizarCampo(id, campo, valor) {
+  const doc = docs.find(d => d.id === id);
+  if (doc) { doc[campo] = valor; }
+  actualizarEstadisticas();
+}
+
+function eliminar(id) {
+  if (!confirm('¿Eliminar este documento del listado?')) return;
+  docs = docs.filter(d => d.id !== id);
+  filtrados = filtrados.filter(d => d.id !== id);
+  renderizar();
+  actualizarEstadisticas();
+}
+
+function actualizarEstadisticas() {
+  document.getElementById('st-total').textContent = docs.length;
+  document.getElementById('st-proc').textContent = docs.filter(d=>d.tipo==='Procedimiento').length;
+  document.getElementById('st-inst').textContent = docs.filter(d=>d.tipo==='Instructivo').length;
+  document.getElementById('st-form').textContent = docs.filter(d=>d.tipo==='Formato / Registro').length;
+  document.getElementById('st-otros').textContent = docs.filter(d=>!['Procedimiento','Instructivo','Formato / Registro'].includes(d.tipo)).length;
+}
+
+function actualizarSelectProceso() {
+  const sel = document.getElementById('sel-proceso');
+  const procesos = [...new Set(docs.map(d=>d.proceso))].sort();
+  const actual = sel.value;
+  sel.innerHTML = '<option value="">Todos los procesos</option>' +
+    procesos.map(p=>`<option${p===actual?' selected':''}>${p}</option>`).join('');
+}
+
+// ══════════════════ FILTROS ══════════════════
+function filtrar(q) {
+  q = q.toLowerCase();
+  filtrados = docs.filter(d =>
+    d.nombre.toLowerCase().includes(q) ||
+    d.codigo.toLowerCase().includes(q) ||
+    d.proceso.toLowerCase().includes(q) ||
+    d.tipo.toLowerCase().includes(q)
+  );
+  renderizar();
+}
+function filtrarTipo(t) {
+  filtrados = t ? docs.filter(d=>d.tipo===t) : [...docs];
+  renderizar();
+}
+function filtrarProceso(p) {
+  filtrados = p ? docs.filter(d=>d.proceso===p) : [...docs];
+  renderizar();
+}
+
+// ══════════════════ MODAL MANUAL ══════════════════
+function openModal() { document.getElementById('modal').classList.add('open'); }
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+document.getElementById('modal').addEventListener('click', e => { if(e.target===document.getElementById('modal')) closeModal(); });
+
+function agregarManual() {
+  const d = {
+    id: Math.random().toString(36).substr(2,8),
+    nombreOriginal: '',
+    codigo: document.getElementById('m-codigo').value.trim(),
+    nombre: document.getElementById('m-nombre').value.trim(),
+    tipo: document.getElementById('m-tipo').value,
+    proceso: document.getElementById('m-proceso').value,
+    version: document.getElementById('m-version').value || 'v1.0',
+    fecha: new Date().toLocaleDateString('es-CO'),
+    ext: '—',
+    formato: 'Manual',
+    estado: document.getElementById('m-estado').value,
+    link: document.getElementById('m-link').value.trim()
+  };
+  if (!d.nombre) { alert('Ingrese el nombre del documento'); return; }
+  docs.push(d);
+  filtrados = [...docs];
+  renderizar();
+  actualizarEstadisticas();
+  actualizarSelectProceso();
+  closeModal();
+  ['m-codigo','m-nombre','m-version','m-link'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('stats-row').style.display = 'grid';
+}
+
+// ══════════════════ EXPORTAR CSV ══════════════════
+function exportarCSV() {
+  if (!docs.length) { alert('No hay documentos en el listado'); return; }
+  const cols = ['N°','Código','Nombre del documento','Tipo','Proceso','Versión','Fecha modificación','Formato','Estado','Enlace'];
+  const rows = docs.map((d,i) => [
+    i+1, d.codigo, d.nombre, d.tipo, d.proceso, d.version, d.fecha, d.formato, d.estado, d.link
+  ]);
+  const csv = [cols, ...rows].map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Listado_Maestro_Documentos_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+// ══════════════════ EXPORTAR HTML AUDITORÍA ══════════════════
+function exportarHTML() {
+  if (!docs.length) { alert('No hay documentos en el listado'); return; }
+  const fecha = new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'});
+  const resumen = {};
+  docs.forEach(d => { resumen[d.tipo] = (resumen[d.tipo]||0)+1; });
+
+  let html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+<title>Listado Maestro de Documentos — SGC ISO 9001</title>
+<style>
+  body{font-family:Arial,sans-serif;font-size:11px;margin:25px;color:#1a1a1a}
+  h1{font-size:17px;color:#0a1628;margin-bottom:2px}
+  .meta{font-size:10px;color:#666;margin-bottom:14px;line-height:1.7}
+  .resumen{display:flex;gap:14px;margin-bottom:14px;flex-wrap:wrap}
+  .r-item{background:#f4f4f6;border-radius:6px;padding:7px 12px;font-size:10px;text-align:center}
+  .r-num{font-size:18px;font-weight:bold;color:#0a1628;display:block}
+  table{width:100%;border-collapse:collapse;margin-top:6px}
+  th{background:#0a1628;color:#c8972a;padding:6px 7px;text-align:left;font-size:9.5px;letter-spacing:.04em}
+  td{padding:5px 7px;border-bottom:1px solid #e0e0e0;vertical-align:top;font-size:10.5px}
+  tr:nth-child(even)td{background:#fafafa}
+  .code{font-family:monospace;font-weight:bold;font-size:10px;background:#0a1628;color:#c8972a;padding:1px 5px;border-radius:3px}
+  .badge{display:inline-block;padding:1px 6px;border-radius:3px;font-size:9px;font-weight:bold}
+  .b-vig{background:#d4edda;color:#155724}.b-rev{background:#fff3cd;color:#856404}.b-obs{background:#f8d7da;color:#721c24}
+  .b-proc{background:#0a1628;color:#c8972a}.b-inst{background:#d0e8ff;color:#084298}
+  .b-form{background:#d4edda;color:#155724}.b-otro{background:#e8e8ed;color:#4a4a5a}
+  .link-btn{color:#0a1628;font-size:9px}
+  .footer{margin-top:18px;font-size:9px;color:#aaa;border-top:1px solid #ddd;padding-top:7px}
+  @media print{body{margin:10px} .footer{position:fixed;bottom:0;width:100%}}
+</style></head><body>
+<h1>LISTADO MAESTRO DE DOCUMENTOS Y REGISTROS</h1>
+<div class="meta">
+  <strong>Sistema de Gestión de Calidad — ISO 9001:2015</strong> &nbsp;|&nbsp; Cláusula 7.5<br>
+  Empresa de Servicios Públicos — Recolección, Transporte y Aprovechamiento de Residuos · Valle del Cauca<br>
+  Código: SGC-SG-RG-001 &nbsp;|&nbsp; Fecha de generación: <strong>${fecha}</strong> &nbsp;|&nbsp; 
+  Total documentos: <strong>${docs.length}</strong>
+</div>
+<div class="resumen">
+  ${Object.entries(resumen).map(([t,n])=>`<div class="r-item"><span class="r-num">${n}</span>${t}</div>`).join('')}
+</div>
+<table>
+<thead><tr>
+  <th>#</th><th>Código</th><th>Nombre del documento</th><th>Tipo</th><th>Proceso</th>
+  <th>Versión</th><th>Fecha mod.</th><th>Formato</th><th>Estado</th><th>Acceso</th>
+</tr></thead><tbody>
+${docs.map((d,i)=>{
+  const tipoCls = d.tipo==='Procedimiento'?'b-proc':d.tipo==='Instructivo'?'b-inst':d.tipo.includes('Formato')||d.tipo.includes('Registro')?'b-form':'b-otro';
+  const estCls = d.estado==='Vigente'?'b-vig':d.estado==='En revisión'?'b-rev':'b-obs';
+  const link = d.link ? `<a href="${d.link}" class="link-btn" target="_blank">📎 Ver archivo</a>` : '<span style="color:#aaa">—</span>';
+  return `<tr>
+    <td style="text-align:center;color:#888">${i+1}</td>
+    <td><span class="code">${d.codigo||'—'}</span></td>
+    <td><strong>${d.nombre}</strong></td>
+    <td><span class="badge ${tipoCls}">${d.tipo}</span></td>
+    <td>${d.proceso}</td>
+    <td style="text-align:center">${d.version}</td>
+    <td style="text-align:center;color:#666">${d.fecha}</td>
+    <td style="text-align:center">${d.ext}</td>
+    <td><span class="badge ${estCls}">${d.estado}</span></td>
+    <td>${link}</td>
+  </tr>`;
+}).join('')}
+</tbody></table>
+<div class="footer">
+  Documento generado por el Sistema de Gestión de Calidad · SGC-SG-RG-001 · ${fecha}<br>
+  Este listado es información documentada controlada. Verifique vigencia antes de usar.
+</div>
+</body></html>`;
+
+  const blob = new Blob([html],{type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `SGC-SG-RG-001_Listado_Maestro_${new Date().toISOString().slice(0,10)}.html`;
+  a.click(); URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
